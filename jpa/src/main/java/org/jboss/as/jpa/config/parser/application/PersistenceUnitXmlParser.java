@@ -37,32 +37,13 @@ import java.util.List;
 import java.util.Properties;
 
 /**
+ * Parse a persistence.xml into a list of persistence unit definitions.
+ *
+ * NOTE:  that the PU classloaders are not set and need to be set by the caller or something else.
+ *
  * @author Scott Marlow
  */
-public class PersistenceUnitConfigParser extends MetaDataElementParser {
-
-   public static void main(String[] args) {
-      try {
-
-         String filename;
-         if (args.length < 2)
-            filename = "/home/smarlow/persistence.xml";
-         else
-            filename = args[1];
-         XMLInputFactory xmlif = XMLInputFactory.newInstance();
-
-         XMLStreamReader reader =
-            xmlif.createXMLStreamReader(filename, new
-               FileInputStream(filename));
-
-         List<PersistenceMetadata> puList = parse(reader);
-         System.out.println("result = " + puList);
-      } catch (Exception e) {
-         e.printStackTrace();
-      }
-
-   }
-
+public class PersistenceUnitXmlParser extends MetaDataElementParser {
 
    public static List<PersistenceMetadata> parse(final XMLStreamReader reader) throws XMLStreamException {
 
@@ -112,7 +93,7 @@ public class PersistenceUnitConfigParser extends MetaDataElementParser {
          if (reader.getAttributeNamespace(i) != null) {
             continue;
          }
-         final TopElement attribute = TopElement.forName(reader.getAttributeLocalName(i));
+         final Element attribute = Element.forName(reader.getAttributeLocalName(i));
          switch (attribute) {
             case VERSION:
                System.out.println("version = " + value);
@@ -124,10 +105,10 @@ public class PersistenceUnitConfigParser extends MetaDataElementParser {
       final List<PersistenceMetadata> PUs = new ArrayList<PersistenceMetadata>();
       // until the ending PERSISTENCE tag
       while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
-         final PUCollectionElement element = PUCollectionElement.forName(reader.getLocalName());
+         final Element element = Element.forName(reader.getLocalName());
          switch (element) {
             case PERSISTENCEUNIT:
-               PersistenceMetadata pu = parsePU(reader);
+               PersistenceMetadata pu = parsePU(reader, version);
                PUs.add(pu);
                break;
 
@@ -142,12 +123,11 @@ public class PersistenceUnitConfigParser extends MetaDataElementParser {
 
    /**
     * Parse the persistence unit definitions based on persistence_2_0.xsd.
-    * TODO:  handle persistence_1_0.xsd if schema version is 1.0
     * @param reader
     * @return
     * @throws XMLStreamException
     */
-   private static PersistenceMetadata parsePU(XMLStreamReader reader) throws XMLStreamException {
+   private static PersistenceMetadata parsePU(XMLStreamReader reader, Version version) throws XMLStreamException {
       PersistenceMetadata pu = new PersistenceMetadata();
       List<String> classes = new ArrayList<String>(1);
       List<String> jarfiles = new ArrayList<String>(1);
@@ -165,7 +145,7 @@ public class PersistenceUnitConfigParser extends MetaDataElementParser {
          if (reader.getAttributeNamespace(i) != null) {
             continue;
          }
-         final PUCollectionElement attribute = PUCollectionElement.forName(reader.getAttributeLocalName(i));
+         final Element attribute = Element.forName(reader.getAttributeLocalName(i));
          switch (attribute) {
             case NAME:
                pu.setPersistenceUnitName(value);
@@ -181,11 +161,12 @@ public class PersistenceUnitConfigParser extends MetaDataElementParser {
 
       // until the ending PERSISTENCEUNIT tag
       while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
-         final PuElement element = PuElement.forName(reader.getLocalName());
+         final Element element = Element.forName(reader.getLocalName());
          switch (element) {
             case CLASS:
                classes.add(reader.getElementText());
                break;
+
             case DESCRIPTION:
                final String description = reader.getElementText();
                break;
@@ -244,7 +225,7 @@ public class PersistenceUnitConfigParser extends MetaDataElementParser {
    private static void parseProperties(XMLStreamReader reader, Properties properties) throws XMLStreamException {
 
       while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
-         final PropertyElement element = PropertyElement.forName(reader.getLocalName());
+         final Element element = Element.forName(reader.getLocalName());
          switch (element) {
             case PROPERTY:
                final int count = reader.getAttributeCount();
@@ -254,7 +235,7 @@ public class PersistenceUnitConfigParser extends MetaDataElementParser {
                   if (reader.getAttributeNamespace(i) != null) {
                      continue;
                   }
-                  final PropertyElement attribute = PropertyElement.forName(reader.getAttributeLocalName(i));
+                  final Element attribute = Element.forName(reader.getAttributeLocalName(i));
                   switch (attribute) {
                      case NAME:
                         name = attributeValue;
@@ -279,4 +260,31 @@ public class PersistenceUnitConfigParser extends MetaDataElementParser {
          }
       }
    }
+
+   /**
+    * Simple test driver for parsing the specified persistence.xml file
+    * @param args
+    */
+   public static void main(String[] args) {
+      try {
+         String filename;
+         if (args.length < 2) {
+            filename = "persistence.xml";
+         }
+         else
+            filename = args[1];
+         System.out.println("will parse " + filename);
+         XMLInputFactory xmlif = XMLInputFactory.newInstance();
+
+         XMLStreamReader reader =
+            xmlif.createXMLStreamReader(filename, new
+               FileInputStream(filename));
+
+         List<PersistenceMetadata> puList = parse(reader);
+         System.out.println("result = " + puList);
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+
 }

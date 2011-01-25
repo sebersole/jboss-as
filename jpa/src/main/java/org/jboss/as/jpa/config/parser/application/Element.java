@@ -27,24 +27,37 @@ import java.util.Map;
 
 /**
  * An enumeration of all the possible XML attributes in the Persistence Unit schema, by name.
+ * I started with these separated but found little reason for it, merged into here.
  *
  * @author Scott Marlow
  */
-public enum PUCollectionElement {
+public enum Element {
    // always first
    UNKNOWN(null),
-
-   // PU 2.0 attributes in alpha order
-
-   // the root element is the <persistence>
-
+   // followed by all entries in sorted order
+   CLASS("class"),
+   DESCRIPTION("description"),
+   EXCLUDEUNLISTEDCLASSES("exclude-unlisted-classes"),
+   JARFILE("jar-file"),
+   JTADATASOURCE("jta-data-source"),
+   MAPPINGFILE("mapping-file"),
    NAME("name"),
+   NONJTADATASOURCE("non-jta-data-source"),
+   PERSISTENCE("persistence"),
    PERSISTENCEUNIT("persistence-unit"),
-   TRANSACTIONTYPE("transaction-type");
+   PROPERTIES("properties"),
+   PROPERTY("property"),
+   PROVIDER("provider"),
+   SHAREDCACHEMODE("shared-cache-mode"),
+   TRANSACTIONTYPE("transaction-type"),
+   VALIDATIONMODE("validation-mode"),
+   VALUE("value"),
+   VERSION("version")
+   ;
 
    private final String name;
 
-   PUCollectionElement(final String name) {
+   Element(final String name) {
       this.name = name;
    }
 
@@ -57,19 +70,19 @@ public enum PUCollectionElement {
       return name;
    }
 
-   private static final Map<String, PUCollectionElement> MAP;
+   private static final Map<String, Element> MAP;
 
    static {
-      final Map<String, PUCollectionElement> map = new HashMap<String, PUCollectionElement>();
-      for (PUCollectionElement element : values()) {
+      final Map<String, Element> map = new HashMap<String, Element>();
+      for (Element element : values()) {
          final String name = element.getLocalName();
          if (name != null) map.put(name, element);
       }
       MAP = map;
    }
 
-   public static PUCollectionElement forName(String localName) {
-      final PUCollectionElement element = MAP.get(localName);
+   public static Element forName(String localName) {
+      final Element element = MAP.get(localName);
       return element == null ? UNKNOWN : element;
    }
 }

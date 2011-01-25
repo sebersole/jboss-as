@@ -57,7 +57,7 @@ public class JPASubsystemParser implements XMLElementReader<ParseResult<Extensio
 
       while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
          switch (Namespace.forUri(reader.getNamespaceURI())) {
-            case JPA_1_0:
+            case JPA_1_0:  //  version of this subsystem (not of the JPA specification supported)
                final Element element = Element.forName(reader.getLocalName());
                switch (element) {
                   case ASSEMBLY_DESCRIPTOR:

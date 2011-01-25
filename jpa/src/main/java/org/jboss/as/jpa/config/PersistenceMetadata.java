@@ -57,9 +57,6 @@ public class PersistenceMetadata implements PersistenceUnitInfo {
    // optional: specifies if EntityManagers will be JTA (default) or RESOURCE_LOCAL
    private PersistenceUnitTransactionType transactionType;
 
-   // ignore: delimited-identifiers can only be specified in the orm.xml
-   // private boolean useQuotedIdentifiers = false; // the spec (erroneously?) calls this delimited-identifiers
-
    // optional: collection of individually named managed entity classes
    private List<String> classes = new ArrayList<String>(1);
 
@@ -76,7 +73,7 @@ public class PersistenceMetadata implements PersistenceUnitInfo {
    private Properties props = new Properties();
 
    // optional: specifies whether to include entity classes in the root folder containing the persistence unit.
-   private boolean excludeUnlistedClasses = false;
+   private boolean excludeUnlistedClasses;
 
    // optional:  validation mode can be "auto", "callback", "none".
    private ValidationMode validationMode;
@@ -85,11 +82,6 @@ public class PersistenceMetadata implements PersistenceUnitInfo {
    private String version;
 
    private List<ClassTransformer> transformers = new ArrayList<ClassTransformer>(1);
-
-
-   public boolean isExcludeUnlistedClasses() {
-      return excludeUnlistedClasses;
-   }
 
    private SharedCacheMode sharedCacheMode;
 
@@ -115,13 +107,9 @@ public class PersistenceMetadata implements PersistenceUnitInfo {
       return provider;
    }
 
+   @Override
    public PersistenceUnitTransactionType getTransactionType() {
       return transactionType;
-   }
-
-
-   public void setNonJtaDataSource(String nonJtaDatasource) {
-      this.nonJtaDatasource = nonJtaDatasource;
    }
 
    public void setJtaDataSource(String jtaDatasource) {
@@ -131,6 +119,10 @@ public class PersistenceMetadata implements PersistenceUnitInfo {
    @Override
    public DataSource getJtaDataSource() {
       return null;  // todo:  proper DataSource;
+   }
+
+   public void setNonJtaDataSource(String nonJtaDatasource) {
+      this.nonJtaDatasource = nonJtaDatasource;
    }
 
    @Override
@@ -200,10 +192,6 @@ public class PersistenceMetadata implements PersistenceUnitInfo {
       this.jarFiles = jarFiles;
    }
 
-   public boolean getExcludeUnlistedClasses() {
-      return excludeUnlistedClasses;
-   }
-
    public void setExcludeUnlistedClasses(boolean excludeUnlistedClasses) {
       this.excludeUnlistedClasses = excludeUnlistedClasses;
    }
@@ -269,6 +257,7 @@ public class PersistenceMetadata implements PersistenceUnitInfo {
       this.validationMode = validationMode;
    }
 
+   @Override
    public ValidationMode getValidationMode() {
       return validationMode;
    }
@@ -293,6 +282,17 @@ public class PersistenceMetadata implements PersistenceUnitInfo {
       return version;
    }
 
+   /**
+    * Return a classloader that the provider can use to load the entity classes.
+    *
+    * Note from JPA 8.2:
+    * All persistence classes defined at the level of the Java EE EAR must be accessible to other Java EE
+    * components in the application—i.e. loaded by the application classloader—such that if the same entity
+    * class is referenced by two different Java EE components (which may be using different persistence
+    * units), the referenced class is the same identical class.
+    *
+    * @return
+    */
    // TODO:  handle the classloader
    @Override
    public ClassLoader getClassLoader() {
@@ -310,6 +310,7 @@ public class PersistenceMetadata implements PersistenceUnitInfo {
       return null;  //To change body of implemented methods use File | Settings | File Templates.
    }
 
+   @Override
    public SharedCacheMode getSharedCacheMode() {
       return sharedCacheMode;
    }
