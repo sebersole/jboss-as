@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * for persistence unit processing
+ * Represents the persistence unit definition
  *
  * @author Scott Marlow (based on work by Bill Burke)
  */

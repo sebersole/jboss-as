@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * An enumeration of all the possible XML attributes in the Persistence Unit schema, by name.
- * I started with these separated but found little reason for it, merged into here.
+ *
  *
  * @author Scott Marlow
  */
@@ -49,9 +49,7 @@ public enum Element {
    PROPERTY("property"),
    PROVIDER("provider"),
    SHAREDCACHEMODE("shared-cache-mode"),
-   TRANSACTIONTYPE("transaction-type"),
    VALIDATIONMODE("validation-mode"),
-   VALUE("value"),
    VERSION("version")
    ;
 

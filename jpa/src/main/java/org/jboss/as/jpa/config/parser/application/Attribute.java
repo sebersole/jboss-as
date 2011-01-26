@@ -34,9 +34,10 @@ public enum Attribute {
 
    // attributes in alpha order
    ID("id"),
-
    LANG("lang"),
-
+   NAME("name"),
+   TRANSACTIONTYPE("transaction-type"),
+   VALUE("value"),
    VERSION("version");
 
    private final String name;

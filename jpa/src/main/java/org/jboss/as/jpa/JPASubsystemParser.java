@@ -23,8 +23,6 @@ package org.jboss.as.jpa;
 
 import org.jboss.as.server.ExtensionContext;
 import org.jboss.as.jpa.config.JBossAssemblyDescriptor;
-import org.jboss.as.jpa.parser.Element;
-import org.jboss.as.jpa.parser.Namespace;
 import org.jboss.as.model.ParseResult;
 import org.jboss.as.model.ParseUtils;
 import org.jboss.staxmapper.XMLElementReader;

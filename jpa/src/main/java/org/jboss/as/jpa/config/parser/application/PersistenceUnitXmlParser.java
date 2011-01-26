@@ -93,7 +93,7 @@ public class PersistenceUnitXmlParser extends MetaDataElementParser {
          if (reader.getAttributeNamespace(i) != null) {
             continue;
          }
-         final Element attribute = Element.forName(reader.getAttributeLocalName(i));
+         final Attribute attribute = Attribute.forName(reader.getAttributeLocalName(i));
          switch (attribute) {
             case VERSION:
                System.out.println("version = " + value);
@@ -145,7 +145,7 @@ public class PersistenceUnitXmlParser extends MetaDataElementParser {
          if (reader.getAttributeNamespace(i) != null) {
             continue;
          }
-         final Element attribute = Element.forName(reader.getAttributeLocalName(i));
+         final Attribute attribute = Attribute.forName(reader.getAttributeLocalName(i));
          switch (attribute) {
             case NAME:
                pu.setPersistenceUnitName(value);
@@ -235,7 +235,7 @@ public class PersistenceUnitXmlParser extends MetaDataElementParser {
                   if (reader.getAttributeNamespace(i) != null) {
                      continue;
                   }
-                  final Element attribute = Element.forName(reader.getAttributeLocalName(i));
+                  final Attribute attribute = Attribute.forName(reader.getAttributeLocalName(i));
                   switch (attribute) {
                      case NAME:
                         name = attributeValue;
@@ -268,11 +268,11 @@ public class PersistenceUnitXmlParser extends MetaDataElementParser {
    public static void main(String[] args) {
       try {
          String filename;
-         if (args.length < 2) {
+         if (args.length < 1) {
             filename = "persistence.xml";
          }
          else
-            filename = args[1];
+            filename = args[0];
          System.out.println("will parse " + filename);
          XMLInputFactory xmlif = XMLInputFactory.newInstance();
 
