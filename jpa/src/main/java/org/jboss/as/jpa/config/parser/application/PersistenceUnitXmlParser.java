@@ -139,6 +139,12 @@ public class PersistenceUnitXmlParser extends MetaDataElementParser {
         pu.setTransactionType(PersistenceUnitTransactionType.JTA);
         pu.setValidationMode(ValidationMode.AUTO);
         pu.setSharedCacheMode(SharedCacheMode.UNSPECIFIED);
+        if (version.equals(Version.JPA_1_0)) {
+            pu.setPersistenceXMLSchemaVersion("1.0");
+        }
+        else {
+            pu.setPersistenceXMLSchemaVersion("2.0");
+        }
 
         final int count = reader.getAttributeCount();
         for (int i = 0; i < count; i++) {
