@@ -33,8 +33,8 @@ import org.jboss.as.server.deployment.Phase;
  * @author Scott Marlow
  */
 public class JPADeploymentActivator {
-   public static void activate(BootUpdateContext updateContext) {
-      updateContext.addDeploymentProcessor(Phase.PARSE, Phase.PARSE_PERSISTENTUNIT, new PersistenceUnitDUP());
+    public static void activate(BootUpdateContext updateContext) {
+        updateContext.addDeploymentProcessor(Phase.PARSE, Phase.PARSE_PERSISTENTUNIT, new PersistenceUnitDUP());
 
-   }
+    }
 }

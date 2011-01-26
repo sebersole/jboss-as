@@ -29,43 +29,43 @@ import org.jboss.as.model.UpdateResultHandler;
 
 /**
  * Add the JPA subsystem directive.
- *
+ * <p/>
  * TODO:  add subsystem configuration properties
  *
  * @author Scott Marlow
  */
 public class JPASubsystemAdd extends AbstractSubsystemAdd<JPASubsystemElement> {
-   private JBossAssemblyDescriptor assemblyDescriptor;
+    private JBossAssemblyDescriptor assemblyDescriptor;
 
-   protected JPASubsystemAdd() {
-      super(JPASubsystemParser.NAMESPACE);
-   }
+    protected JPASubsystemAdd() {
+        super(JPASubsystemParser.NAMESPACE);
+    }
 
-   @Override
-   protected <P> void applyUpdate(UpdateContext updateContext, UpdateResultHandler<? super Void, P> resultHandler, P param) {
-      throw new RuntimeException("NYI: org.jboss.as.jpa.JPASubsystemAdd.applyUpdate");
-   }
+    @Override
+    protected <P> void applyUpdate(UpdateContext updateContext, UpdateResultHandler<? super Void, P> resultHandler, P param) {
+        throw new RuntimeException("NYI: org.jboss.as.jpa.JPASubsystemAdd.applyUpdate");
+    }
 
-   @Override
-   protected void applyUpdateBootAction(BootUpdateContext updateContext) {
+    @Override
+    protected void applyUpdateBootAction(BootUpdateContext updateContext) {
 
-      JPADeploymentActivator.activate( updateContext);
+        JPADeploymentActivator.activate(updateContext);
 
-      // TODO:  figure out what the deal is with the following call, which calls the above applyUpdate().
-      //        WebSubsystemAdd doesn't call super.applyUpdateBootAction, maybe we shouldn't either?
-      super.applyUpdateBootAction(updateContext);
-   }
+        // TODO:  figure out what the deal is with the following call, which calls the above applyUpdate().
+        //        WebSubsystemAdd doesn't call super.applyUpdateBootAction, maybe we shouldn't either?
+        super.applyUpdateBootAction(updateContext);
+    }
 
-   @Override
-   protected JPASubsystemElement createSubsystemElement() {
-      return new JPASubsystemElement();
-   }
+    @Override
+    protected JPASubsystemElement createSubsystemElement() {
+        return new JPASubsystemElement();
+    }
 
-   protected JBossAssemblyDescriptor getAssemblyDescriptor() {
-      return assemblyDescriptor;
-   }
+    protected JBossAssemblyDescriptor getAssemblyDescriptor() {
+        return assemblyDescriptor;
+    }
 
-   protected void setAssemblyDescriptor(JBossAssemblyDescriptor assemblyDescriptor) {
-      this.assemblyDescriptor = assemblyDescriptor;
-   }
+    protected void setAssemblyDescriptor(JBossAssemblyDescriptor assemblyDescriptor) {
+        this.assemblyDescriptor = assemblyDescriptor;
+    }
 }

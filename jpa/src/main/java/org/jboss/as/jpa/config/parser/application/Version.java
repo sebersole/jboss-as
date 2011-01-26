@@ -30,26 +30,26 @@ import java.util.Map;
  */
 public enum Version {
 
-   UNKNOWN(null),
-   JPA_1_0("http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"),
-   JPA_2_0("http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd");
+    UNKNOWN(null),
+    JPA_1_0("http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"),
+    JPA_2_0("http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd");
 
-   private static final Map<String, Version> bindings = new HashMap<String, Version>();
+    private static final Map<String, Version> bindings = new HashMap<String, Version>();
 
-   private final String location;
+    private final String location;
 
-   Version(String location) {
-      this.location = location;
-   }
+    Version(String location) {
+        this.location = location;
+    }
 
-   static {
-      for (Version version : values()) {
-         bindings.put(version.location, version);
-      }
-   }
+    static {
+        for (Version version : values()) {
+            bindings.put(version.location, version);
+        }
+    }
 
-   public static Version forLocation(final String location) {
-      final Version version = bindings.get(location);
-      return version != null ? version : UNKNOWN;
-   }
+    public static Version forLocation(final String location) {
+        final Version version = bindings.get(location);
+        return version != null ? version : UNKNOWN;
+    }
 }

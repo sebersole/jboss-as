@@ -35,44 +35,43 @@ import org.jboss.as.server.deployment.DeploymentUnitProcessor;
  *
  * @author Scott Marlow
  */
-public class PersistenceUnitDUP  implements DeploymentUnitProcessor {
+public class PersistenceUnitDUP implements DeploymentUnitProcessor {
 
-   @Override
-   public void deploy(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
-      handleWarDeployment(phaseContext);
+    @Override
+    public void deploy(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
+        handleWarDeployment(phaseContext);
 
-      // TODO:  handle an EJB-JAR file
-      // handleEJBDeployment
+        // TODO:  handle an EJB-JAR file
+        // handleEJBDeployment
 
-      // TODO:  handle jar file in the EAR library directory
-      // handleEARDeployment
+        // TODO:  handle jar file in the EAR library directory
+        // handleEARDeployment
 
-      // TODO:  application client deployment (probably would be a separate DUP class)
-      // handle client deployment
-
-
-   }
-
-   @Override
-   public void undeploy(DeploymentUnit context) {
-      // TODO:  undeploy
-   }
-
-   private void handleWarDeployment(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
-      final DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
-      if(isWarDeployment(deploymentUnit)) {
-         // handle WEB-INF/classes/META-INF/persistence.xml or
-         // a jar file in the WEB-INF/lib directory of a WAR file
+        // TODO:  application client deployment (probably would be a separate DUP class)
+        // handle client deployment
 
 
+    }
 
-      }
-   }
+    @Override
+    public void undeploy(DeploymentUnit context) {
+        // TODO:  undeploy
+    }
 
-   // TODO:
-   static boolean isWarDeployment(final DeploymentUnit context) {
-       final Boolean result = context.getAttachment(Attachments.WAR_DEPLOYMENT_MARKER);
-       return result != null && result;
-   }
+    private void handleWarDeployment(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
+        final DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
+        if (isWarDeployment(deploymentUnit)) {
+            // handle WEB-INF/classes/META-INF/persistence.xml or
+            // a jar file in the WEB-INF/lib directory of a WAR file
+
+
+        }
+    }
+
+    // TODO:
+    static boolean isWarDeployment(final DeploymentUnit context) {
+        final Boolean result = context.getAttachment(Attachments.WAR_DEPLOYMENT_MARKER);
+        return result != null && result;
+    }
 
 }

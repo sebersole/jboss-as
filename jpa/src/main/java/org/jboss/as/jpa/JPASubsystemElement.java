@@ -35,38 +35,38 @@ import java.util.List;
  * @author Scott Marlow
  */
 public class JPASubsystemElement extends AbstractSubsystemElement<JPASubsystemElement> {
-   JPASubsystemElement() {
-      super(JPASubsystemParser.NAMESPACE);
-   }
+    JPASubsystemElement() {
+        super(JPASubsystemParser.NAMESPACE);
+    }
 
-   @Override
-   protected void getUpdates(List<? super AbstractSubsystemUpdate<JPASubsystemElement, ?>> objects) {
-      throw new RuntimeException("NYI: org.jboss.as.jpa.JPASubsystemElement.getUpdates");
-   }
+    @Override
+    protected void getUpdates(List<? super AbstractSubsystemUpdate<JPASubsystemElement, ?>> objects) {
+        throw new RuntimeException("NYI: org.jboss.as.jpa.JPASubsystemElement.getUpdates");
+    }
 
-   @Override
-   protected boolean isEmpty() {
-      throw new RuntimeException("NYI: org.jboss.as.jpa.JPASubsystemElement.isEmpty");
-   }
+    @Override
+    protected boolean isEmpty() {
+        throw new RuntimeException("NYI: org.jboss.as.jpa.JPASubsystemElement.isEmpty");
+    }
 
-   @Override
-   protected AbstractSubsystemAdd<JPASubsystemElement> getAdd() {
-      throw new RuntimeException("NYI: org.jboss.as.jpa.JPASubsystemElement.getAdd");
-   }
+    @Override
+    protected AbstractSubsystemAdd<JPASubsystemElement> getAdd() {
+        throw new RuntimeException("NYI: org.jboss.as.jpa.JPASubsystemElement.getAdd");
+    }
 
-   @Override
-   protected <P> void applyRemove(UpdateContext updateContext, UpdateResultHandler<? super Void, P> resultHandler, P param) {
-      throw new RuntimeException("NYI: org.jboss.as.jpa.JPASubsystemElement.applyRemove");
-   }
+    @Override
+    protected <P> void applyRemove(UpdateContext updateContext, UpdateResultHandler<? super Void, P> resultHandler, P param) {
+        throw new RuntimeException("NYI: org.jboss.as.jpa.JPASubsystemElement.applyRemove");
+    }
 
-   @Override
-   protected Class<JPASubsystemElement> getElementClass() {
-      return JPASubsystemElement.class;
-   }
+    @Override
+    protected Class<JPASubsystemElement> getElementClass() {
+        return JPASubsystemElement.class;
+    }
 
-   @Override
-   public void writeContent(XMLExtendedStreamWriter streamWriter) throws XMLStreamException {
-      // TODO: really write out some stuff
-      streamWriter.writeEndElement();
-   }
+    @Override
+    public void writeContent(XMLExtendedStreamWriter streamWriter) throws XMLStreamException {
+        // TODO: really write out some stuff
+        streamWriter.writeEndElement();
+    }
 }

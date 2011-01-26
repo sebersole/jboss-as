@@ -28,15 +28,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Scott Marlow
  */
 public class JBossAssemblyDescriptor {
-   private Map<Class<?>, Object> any = new ConcurrentHashMap<Class<?>, Object>();
+    private Map<Class<?>, Object> any = new ConcurrentHashMap<Class<?>, Object>();
 
-   public void addAny(Object a) {
-      Class<?> cls = a.getClass();
-      Object previous = any.put(cls, a);
-      assert previous == null : "previous object for class " + cls + " is " + previous + " instead of null";
-   }
+    public void addAny(Object a) {
+        Class<?> cls = a.getClass();
+        Object previous = any.put(cls, a);
+        assert previous == null : "previous object for class " + cls + " is " + previous + " instead of null";
+    }
 
-   public <T> T getAny(Class<T> type) {
-      return type.cast(any.get(type));
-   }
+    public <T> T getAny(Class<T> type) {
+        return type.cast(any.get(type));
+    }
 }

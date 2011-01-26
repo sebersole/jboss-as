@@ -42,280 +42,280 @@ import java.util.Properties;
  */
 public class PersistenceMetadata implements PersistenceUnitInfo {
 
-   // required: name of the persistent unit
-   private String name;
+    // required: name of the persistent unit
+    private String name;
 
-   // optional: jndi name of non-jta datasource
-   private String nonJtaDatasource;
+    // optional: jndi name of non-jta datasource
+    private String nonJtaDatasource;
 
-   // optional: jndi name of jta datasource
-   private String jtaDatasource;
+    // optional: jndi name of jta datasource
+    private String jtaDatasource;
 
-   // optional: provider classname (must implement javax.persistence.spi.PersistenceProvider)
-   private String provider;
+    // optional: provider classname (must implement javax.persistence.spi.PersistenceProvider)
+    private String provider;
 
-   // optional: specifies if EntityManagers will be JTA (default) or RESOURCE_LOCAL
-   private PersistenceUnitTransactionType transactionType;
+    // optional: specifies if EntityManagers will be JTA (default) or RESOURCE_LOCAL
+    private PersistenceUnitTransactionType transactionType;
 
-   // optional: collection of individually named managed entity classes
-   private List<String> classes = new ArrayList<String>(1);
+    // optional: collection of individually named managed entity classes
+    private List<String> classes = new ArrayList<String>(1);
 
-   // optional:
-   private List<String> packages = new ArrayList<String>(1);
+    // optional:
+    private List<String> packages = new ArrayList<String>(1);
 
-   // optional:  collection of jar file names that contain entity classes
-   private List<String> jarFiles = new ArrayList<String>(1);
+    // optional:  collection of jar file names that contain entity classes
+    private List<String> jarFiles = new ArrayList<String>(1);
 
-   // optional: collection of orm.xml style entity mapping files
-   private List<String> mappingFiles = new ArrayList<String>(1);
+    // optional: collection of orm.xml style entity mapping files
+    private List<String> mappingFiles = new ArrayList<String>(1);
 
-   // collection of properties for the persistence provider
-   private Properties props = new Properties();
+    // collection of properties for the persistence provider
+    private Properties props = new Properties();
 
-   // optional: specifies whether to include entity classes in the root folder containing the persistence unit.
-   private boolean excludeUnlistedClasses;
+    // optional: specifies whether to include entity classes in the root folder containing the persistence unit.
+    private boolean excludeUnlistedClasses;
 
-   // optional:  validation mode can be "auto", "callback", "none".
-   private ValidationMode validationMode;
+    // optional:  validation mode can be "auto", "callback", "none".
+    private ValidationMode validationMode;
 
-   // optional: version of the JPA specification
-   private String version;
+    // optional: version of the JPA specification
+    private String version;
 
-   private List<ClassTransformer> transformers = new ArrayList<ClassTransformer>(1);
+    private List<ClassTransformer> transformers = new ArrayList<ClassTransformer>(1);
 
-   private SharedCacheMode sharedCacheMode;
-
-
-   public void setPersistenceUnitName(String name) {
-      this.name = name;
-   }
-
-   @Override
-   public String getPersistenceUnitName() {
-      return name;
-   }
-
-   public void setPersistenceProviderClassName(String provider) {
-      if ( provider != null && provider.endsWith( ".class" ) ) {
-         this.provider = provider.substring( 0, provider.length() - 6 );
-      }
-      this.provider = provider;
-   }
-
-   @Override
-   public String getPersistenceProviderClassName() {
-      return provider;
-   }
-
-   @Override
-   public PersistenceUnitTransactionType getTransactionType() {
-      return transactionType;
-   }
-
-   public void setJtaDataSource(String jtaDatasource) {
-      this.jtaDatasource = jtaDatasource;
-   }
-
-   @Override
-   public DataSource getJtaDataSource() {
-      return null;  // todo:  proper DataSource;
-   }
-
-   public void setNonJtaDataSource(String nonJtaDatasource) {
-      this.nonJtaDatasource = nonJtaDatasource;
-   }
-
-   @Override
-   public DataSource getNonJtaDataSource() {
-      return null;  // TODO:  proper DataSource
-   }
-
-   @Override
-   public List<String> getMappingFileNames() {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
-   }
-
-   @Override
-   public List<URL> getJarFileUrls() {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
-   }
-
-   @Override
-   public URL getPersistenceUnitRootUrl() {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
-   }
-
-   @Override
-   public List<String> getManagedClassNames() {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
-   }
-
-   @Override
-   public boolean excludeUnlistedClasses() {
-      return false;  //To change body of implemented methods use File | Settings | File Templates.
-   }
-
-   public void setTransactionType(PersistenceUnitTransactionType transactionType) {
-      this.transactionType = transactionType;
-   }
+    private SharedCacheMode sharedCacheMode;
 
 
-   public List<String> getClasses() {
-      return classes;
-   }
+    public void setPersistenceUnitName(String name) {
+        this.name = name;
+    }
 
-   public void setClasses(List<String> classes) {
-      this.classes = classes;
-   }
+    @Override
+    public String getPersistenceUnitName() {
+        return name;
+    }
 
-   public List<String> getPackages() {
-      return packages;
-   }
+    public void setPersistenceProviderClassName(String provider) {
+        if (provider != null && provider.endsWith(".class")) {
+            this.provider = provider.substring(0, provider.length() - 6);
+        }
+        this.provider = provider;
+    }
 
-   public void setPackages(List<String> packages) {
-      this.packages = packages;
-   }
+    @Override
+    public String getPersistenceProviderClassName() {
+        return provider;
+    }
 
-   public List<String> getMappingFiles() {
-      return mappingFiles;
-   }
+    @Override
+    public PersistenceUnitTransactionType getTransactionType() {
+        return transactionType;
+    }
 
-   public void setMappingFiles(List<String> mappingFiles) {
-      this.mappingFiles = mappingFiles;
-   }
+    public void setJtaDataSource(String jtaDatasource) {
+        this.jtaDatasource = jtaDatasource;
+    }
 
-   public List<String> getJarFiles() {
-      return jarFiles;
-   }
+    @Override
+    public DataSource getJtaDataSource() {
+        return null;  // todo:  proper DataSource;
+    }
 
-   public void setJarFiles(List<String> jarFiles) {
-      this.jarFiles = jarFiles;
-   }
+    public void setNonJtaDataSource(String nonJtaDatasource) {
+        this.nonJtaDatasource = nonJtaDatasource;
+    }
 
-   public void setExcludeUnlistedClasses(boolean excludeUnlistedClasses) {
-      this.excludeUnlistedClasses = excludeUnlistedClasses;
-   }
+    @Override
+    public DataSource getNonJtaDataSource() {
+        return null;  // TODO:  proper DataSource
+    }
 
-   @Override
-   public String toString() {
-      StringBuilder sb = new StringBuilder();
-      sb.append("PersistenceMetadata(version=")
-            .append(version)
-            .append(") [\n")
-            .append("\tname: ").append(name).append("\n")
-            .append("\tjtaDataSource: ").append(jtaDatasource).append("\n")
-            .append("\tnonJtaDataSource: ").append(nonJtaDatasource).append("\n")
-            .append("\ttransactionType: ").append(transactionType).append("\n")
-            .append("\tprovider: ").append(provider).append("\n")
-            .append("\tclasses[\n");
-      if (classes != null) {
-         for (String elt : classes) {
-            sb.append("\t\t").append( elt );
-         }
-      }
-      sb.append( "\t]\n")
-            .append("\tpackages[\n");
-      if (packages != null) {
-         for (String elt : packages) {
-            sb.append("\t\t").append( elt ).append("\n");
-         }
-      }
-      sb.append( "\t]\n")
-            .append("\tmappingFiles[\n");
-      if (mappingFiles != null) {
-         for (String elt : mappingFiles) {
-            sb.append("\t\t").append( elt ).append("\n");
-         }
-      }
-      sb.append( "\t]\n")
-            .append("\tjarFiles[\n");
-      if (jarFiles != null) {
-         for (String elt : jarFiles) {
-            sb.append("\t\t").append( elt ).append("\n");
-         }
-      }
-      if (validationMode != null) {
-         sb.append("\tvalidation-mode: ").append(validationMode).append("\n");
-      }
-      if (sharedCacheMode != null) {
-         sb.append("\tshared-cache-mode: ").append(sharedCacheMode).append("\n");
-      }
+    @Override
+    public List<String> getMappingFileNames() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
-      sb.append("\tproperties[\n");
+    @Override
+    public List<URL> getJarFileUrls() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
-      if (props != null) {
-         for ( Map.Entry elt : props.entrySet()) {
-            sb.append("\t\t").append( elt.getKey() ).append(": ").append( elt.getValue() ).append("\n");
-         }
-      }
-      sb.append( "\t]").append( "]");
+    @Override
+    public URL getPersistenceUnitRootUrl() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
-      return sb.toString();
-   }
+    @Override
+    public List<String> getManagedClassNames() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
-   public void setValidationMode(ValidationMode validationMode) {
-      this.validationMode = validationMode;
-   }
+    @Override
+    public boolean excludeUnlistedClasses() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
-   @Override
-   public ValidationMode getValidationMode() {
-      return validationMode;
-   }
+    public void setTransactionType(PersistenceUnitTransactionType transactionType) {
+        this.transactionType = transactionType;
+    }
 
 
-   public void setProperties(Properties props) {
-      this.props = props;
-   }
+    public List<String> getClasses() {
+        return classes;
+    }
 
-   @Override
-   public Properties getProperties() {
-      return props;
-   }
+    public void setClasses(List<String> classes) {
+        this.classes = classes;
+    }
 
-   // TODO: set the version
-   public void setPersistenceXMLSchemaVersion(String version) {
-      this.version = version;
-   }
+    public List<String> getPackages() {
+        return packages;
+    }
 
-   @Override
-   public String getPersistenceXMLSchemaVersion() {
-      return version;
-   }
+    public void setPackages(List<String> packages) {
+        this.packages = packages;
+    }
 
-   /**
-    * Return a classloader that the provider can use to load the entity classes.
-    *
-    * Note from JPA 8.2:
-    * All persistence classes defined at the level of the Java EE EAR must be accessible to other Java EE
-    * components in the application—i.e. loaded by the application classloader—such that if the same entity
-    * class is referenced by two different Java EE components (which may be using different persistence
-    * units), the referenced class is the same identical class.
-    *
-    * @return
-    */
-   // TODO:  handle the classloader
-   @Override
-   public ClassLoader getClassLoader() {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
-   }
+    public List<String> getMappingFiles() {
+        return mappingFiles;
+    }
 
-   @Override
-   public void addTransformer(ClassTransformer classTransformer) {
-      transformers.add(classTransformer);
-   }
+    public void setMappingFiles(List<String> mappingFiles) {
+        this.mappingFiles = mappingFiles;
+    }
 
-   // TODO:  handle the temp classloader
-   @Override
-   public ClassLoader getNewTempClassLoader() {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
-   }
+    public List<String> getJarFiles() {
+        return jarFiles;
+    }
 
-   @Override
-   public SharedCacheMode getSharedCacheMode() {
-      return sharedCacheMode;
-   }
+    public void setJarFiles(List<String> jarFiles) {
+        this.jarFiles = jarFiles;
+    }
 
-   public void setSharedCacheMode(SharedCacheMode sharedCacheMode) {
-      this.sharedCacheMode = sharedCacheMode;
-   }
+    public void setExcludeUnlistedClasses(boolean excludeUnlistedClasses) {
+        this.excludeUnlistedClasses = excludeUnlistedClasses;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("PersistenceMetadata(version=")
+                .append(version)
+                .append(") [\n")
+                .append("\tname: ").append(name).append("\n")
+                .append("\tjtaDataSource: ").append(jtaDatasource).append("\n")
+                .append("\tnonJtaDataSource: ").append(nonJtaDatasource).append("\n")
+                .append("\ttransactionType: ").append(transactionType).append("\n")
+                .append("\tprovider: ").append(provider).append("\n")
+                .append("\tclasses[\n");
+        if (classes != null) {
+            for (String elt : classes) {
+                sb.append("\t\t").append(elt);
+            }
+        }
+        sb.append("\t]\n")
+                .append("\tpackages[\n");
+        if (packages != null) {
+            for (String elt : packages) {
+                sb.append("\t\t").append(elt).append("\n");
+            }
+        }
+        sb.append("\t]\n")
+                .append("\tmappingFiles[\n");
+        if (mappingFiles != null) {
+            for (String elt : mappingFiles) {
+                sb.append("\t\t").append(elt).append("\n");
+            }
+        }
+        sb.append("\t]\n")
+                .append("\tjarFiles[\n");
+        if (jarFiles != null) {
+            for (String elt : jarFiles) {
+                sb.append("\t\t").append(elt).append("\n");
+            }
+        }
+        if (validationMode != null) {
+            sb.append("\tvalidation-mode: ").append(validationMode).append("\n");
+        }
+        if (sharedCacheMode != null) {
+            sb.append("\tshared-cache-mode: ").append(sharedCacheMode).append("\n");
+        }
+
+        sb.append("\tproperties[\n");
+
+        if (props != null) {
+            for (Map.Entry elt : props.entrySet()) {
+                sb.append("\t\t").append(elt.getKey()).append(": ").append(elt.getValue()).append("\n");
+            }
+        }
+        sb.append("\t]").append("]");
+
+        return sb.toString();
+    }
+
+    public void setValidationMode(ValidationMode validationMode) {
+        this.validationMode = validationMode;
+    }
+
+    @Override
+    public ValidationMode getValidationMode() {
+        return validationMode;
+    }
+
+
+    public void setProperties(Properties props) {
+        this.props = props;
+    }
+
+    @Override
+    public Properties getProperties() {
+        return props;
+    }
+
+    // TODO: set the version
+    public void setPersistenceXMLSchemaVersion(String version) {
+        this.version = version;
+    }
+
+    @Override
+    public String getPersistenceXMLSchemaVersion() {
+        return version;
+    }
+
+    /**
+     * Return a classloader that the provider can use to load the entity classes.
+     * <p/>
+     * Note from JPA 8.2:
+     * All persistence classes defined at the level of the Java EE EAR must be accessible to other Java EE
+     * components in the application—i.e. loaded by the application classloader—such that if the same entity
+     * class is referenced by two different Java EE components (which may be using different persistence
+     * units), the referenced class is the same identical class.
+     *
+     * @return
+     */
+    // TODO:  handle the classloader
+    @Override
+    public ClassLoader getClassLoader() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void addTransformer(ClassTransformer classTransformer) {
+        transformers.add(classTransformer);
+    }
+
+    // TODO:  handle the temp classloader
+    @Override
+    public ClassLoader getNewTempClassLoader() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public SharedCacheMode getSharedCacheMode() {
+        return sharedCacheMode;
+    }
+
+    public void setSharedCacheMode(SharedCacheMode sharedCacheMode) {
+        this.sharedCacheMode = sharedCacheMode;
+    }
 }

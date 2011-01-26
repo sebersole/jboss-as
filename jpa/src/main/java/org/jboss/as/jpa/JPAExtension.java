@@ -31,13 +31,13 @@ import org.jboss.msc.service.ServiceActivatorContext;
  * @author Scott Marlow
  */
 public class JPAExtension implements Extension {
-   @Override
-   public void initialize(ExtensionContext context) {
-      context.registerSubsystem(JPASubsystemParser.NAMESPACE, JPASubsystemParser.getInstance());
-   }
+    @Override
+    public void initialize(ExtensionContext context) {
+        context.registerSubsystem(JPASubsystemParser.NAMESPACE, JPASubsystemParser.getInstance());
+    }
 
-   @Override
-   public void activate(ServiceActivatorContext context) {
-      throw new RuntimeException("NYI: org.jboss.as.jpa.JPAExtension.activate");
-   }
+    @Override
+    public void activate(ServiceActivatorContext context) {
+        throw new RuntimeException("NYI: org.jboss.as.jpa.JPAExtension.activate");
+    }
 }

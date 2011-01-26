@@ -38,52 +38,52 @@ import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
  * @author Scott Marlow
  */
 public class JPASubsystemParser implements XMLElementReader<ParseResult<ExtensionContext.SubsystemConfiguration<JPASubsystemElement>>> {
-   protected static final String NAMESPACE = Namespace.JPA_1_0.getUriString();
+    protected static final String NAMESPACE = Namespace.JPA_1_0.getUriString();
 
-   private static final JPASubsystemParser instance = new JPASubsystemParser();
+    private static final JPASubsystemParser instance = new JPASubsystemParser();
 
-   public static JPASubsystemParser getInstance() {
-      return instance;
-   }
+    public static JPASubsystemParser getInstance() {
+        return instance;
+    }
 
-   @Override
-   public void readElement(XMLExtendedStreamReader reader, ParseResult<ExtensionContext.SubsystemConfiguration<JPASubsystemElement>> result)
-           throws XMLStreamException {
-      // parse <jboss-jpa> domain element
+    @Override
+    public void readElement(XMLExtendedStreamReader reader, ParseResult<ExtensionContext.SubsystemConfiguration<JPASubsystemElement>> result)
+            throws XMLStreamException {
+        // parse <jboss-jpa> domain element
 
-      JPASubsystemAdd subsystem = new JPASubsystemAdd();
+        JPASubsystemAdd subsystem = new JPASubsystemAdd();
 
-      while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
-         switch (Namespace.forUri(reader.getNamespaceURI())) {
-            case JPA_1_0:  //  version of this subsystem (not of the JPA specification supported)
-               final Element element = Element.forName(reader.getLocalName());
-               switch (element) {
-                  case ASSEMBLY_DESCRIPTOR:
-                     subsystem.setAssemblyDescriptor(parseAssemblyDescriptor(reader));
-                     break;
-                  default:
-                     throw ParseUtils.unexpectedElement(reader);
-               }
-               break;
-            default:
-               throw ParseUtils.unexpectedElement(reader);
-         }
-      }
-      result.setResult(new ExtensionContext.SubsystemConfiguration<JPASubsystemElement>(subsystem));
-   }
+        while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
+            switch (Namespace.forUri(reader.getNamespaceURI())) {
+                case JPA_1_0:  //  version of this subsystem (not of the JPA specification supported)
+                    final Element element = Element.forName(reader.getLocalName());
+                    switch (element) {
+                        case ASSEMBLY_DESCRIPTOR:
+                            subsystem.setAssemblyDescriptor(parseAssemblyDescriptor(reader));
+                            break;
+                        default:
+                            throw ParseUtils.unexpectedElement(reader);
+                    }
+                    break;
+                default:
+                    throw ParseUtils.unexpectedElement(reader);
+            }
+        }
+        result.setResult(new ExtensionContext.SubsystemConfiguration<JPASubsystemElement>(subsystem));
+    }
 
-   private static JBossAssemblyDescriptor parseAssemblyDescriptor(XMLExtendedStreamReader reader) throws XMLStreamException {
-      JBossAssemblyDescriptor assemblyDescriptor = new JBossAssemblyDescriptor();
-      while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
-         final Element element = Element.forName(reader.getLocalName());
-         switch (element) {
-            case UNKNOWN:
-               ParseResult<?> result = new ParseResult<Object>();
-               reader.handleAny(result);
-               assemblyDescriptor.addAny(result.getResult());
-               break;
-         }
-      }
-      return assemblyDescriptor;
-   }
+    private static JBossAssemblyDescriptor parseAssemblyDescriptor(XMLExtendedStreamReader reader) throws XMLStreamException {
+        JBossAssemblyDescriptor assemblyDescriptor = new JBossAssemblyDescriptor();
+        while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
+            final Element element = Element.forName(reader.getLocalName());
+            switch (element) {
+                case UNKNOWN:
+                    ParseResult<?> result = new ParseResult<Object>();
+                    reader.handleAny(result);
+                    assemblyDescriptor.addAny(result.getResult());
+                    break;
+            }
+        }
+        return assemblyDescriptor;
+    }
 }
