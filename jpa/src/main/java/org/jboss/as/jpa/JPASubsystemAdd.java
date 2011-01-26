@@ -30,6 +30,8 @@ import org.jboss.as.model.UpdateResultHandler;
 /**
  * Add the JPA subsystem directive.
  *
+ * TODO:  add subsystem configuration properties
+ *
  * @author Scott Marlow
  */
 public class JPASubsystemAdd extends AbstractSubsystemAdd<JPASubsystemElement> {
@@ -46,12 +48,11 @@ public class JPASubsystemAdd extends AbstractSubsystemAdd<JPASubsystemElement> {
 
    @Override
    protected void applyUpdateBootAction(BootUpdateContext updateContext) {
-      // add the config parser deployment processor
-      // TODO
-      // add the real deployment processor
-      // TODO: add the proper deployment processors
-      // updateContext.addDeploymentProcessor(processor, priority);
 
+      JPADeploymentActivator.activate( updateContext);
+
+      // TODO:  figure out what the deal is with the following call, which calls the above applyUpdate().
+      //        WebSubsystemAdd doesn't call super.applyUpdateBootAction, maybe we shouldn't either?
       super.applyUpdateBootAction(updateContext);
    }
 
