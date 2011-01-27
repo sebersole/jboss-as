@@ -25,12 +25,16 @@ import org.jboss.as.server.Extension;
 import org.jboss.as.server.ExtensionContext;
 import org.jboss.msc.service.ServiceActivatorContext;
 
+import java.util.logging.Logger;
+
 /**
  * Domain extension used to initialize the JPA subsystem element handlers.
  *
  * @author Scott Marlow
  */
 public class JPAExtension implements Extension {
+
+    private static final Logger log = Logger.getLogger("org.jboss.jpa");
     @Override
     public void initialize(ExtensionContext context) {
         context.registerSubsystem(JPASubsystemParser.NAMESPACE, JPASubsystemParser.getInstance());
@@ -38,6 +42,6 @@ public class JPAExtension implements Extension {
 
     @Override
     public void activate(ServiceActivatorContext context) {
-        throw new RuntimeException("NYI: org.jboss.as.jpa.JPAExtension.activate");
+        log.info("activating JPA extension");
     }
 }
