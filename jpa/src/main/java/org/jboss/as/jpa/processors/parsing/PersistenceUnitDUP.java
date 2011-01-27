@@ -24,11 +24,26 @@ package org.jboss.as.jpa.processors.parsing;
 
 // import static org.jboss.as.web.deployment.WarDeploymentMarker.isWarDeployment;
 
+import org.jboss.as.jpa.config.PersistenceMetadataHolder;
+import org.jboss.as.jpa.config.parser.application.PersistenceUnitXmlParser;
 import org.jboss.as.server.deployment.Attachments;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.jboss.as.server.deployment.DeploymentUnit;
 import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
+import org.jboss.as.server.deployment.module.ResourceRoot;
+import org.jboss.metadata.parser.util.NoopXmlResolver;
+import org.jboss.vfs.VirtualFile;
+
+import javax.persistence.spi.PersistenceUnitInfo;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Persistence unit deployment unit processor
@@ -36,6 +51,8 @@ import org.jboss.as.server.deployment.DeploymentUnitProcessor;
  * @author Scott Marlow
  */
 public class PersistenceUnitDUP implements DeploymentUnitProcessor {
+
+    private static final String WEB_PERSISTENCE_XML = "WEB-INF/classes/META-INF/persistence.xml";
 
     @Override
     public void deploy(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
@@ -45,9 +62,8 @@ public class PersistenceUnitDUP implements DeploymentUnitProcessor {
         // handleEJBDeployment
 
         // TODO:  handle jar file in the EAR library directory
-        // handleEARDeployment
 
-        // TODO:  application client deployment (probably would be a separate DUP class)
+        // TODO:  application client deployment (probably should be a separate class)
         // handle client deployment
 
 
@@ -58,15 +74,87 @@ public class PersistenceUnitDUP implements DeploymentUnitProcessor {
         // TODO:  undeploy
     }
 
+    private PersistenceMetadataHolder flatten(List<PersistenceMetadataHolder>listPUHolders) {
+        // eliminate duplicates (keeping the first instance of each PU by name)
+        Map<String, PersistenceUnitInfo> flattened = new HashMap<String,PersistenceUnitInfo>();
+        for (PersistenceMetadataHolder puHolder : listPUHolders ) {
+            for (PersistenceUnitInfo pu: puHolder.getPersistenceUnits()) {
+                if(!flattened.containsKey(pu.getPersistenceUnitName()))
+                    flattened.put(pu.getPersistenceUnitName(), pu);
+            }
+        }
+        PersistenceMetadataHolder holder = new PersistenceMetadataHolder();
+        holder.setPersistenceUnits(new ArrayList<PersistenceUnitInfo>(flattened.values()));
+        return holder;
+    }
+
     private void handleWarDeployment(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
         final DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
         if (isWarDeployment(deploymentUnit)) {
-            // handle WEB-INF/classes/META-INF/persistence.xml or
-            // a jar file in the WEB-INF/lib directory of a WAR file
+            // ordered list of PUs
+            List<PersistenceMetadataHolder> listPUHolders = new ArrayList<PersistenceMetadataHolder>(1);
 
+            // handle WEB-INF/classes/META-INF/persistence.xml
+            final ResourceRoot deploymentRoot = deploymentUnit.getAttachment(Attachments.DEPLOYMENT_ROOT);
+            VirtualFile persistence_xml = deploymentRoot.getRoot().getChild(WEB_PERSISTENCE_XML);
+            if (persistence_xml.exists()) {
+                InputStream is = null;
+                try {
+                    is = persistence_xml.openStream();
+                    final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+                    inputFactory.setXMLResolver(NoopXmlResolver.create());
+                    XMLStreamReader xmlReader = inputFactory.createXMLStreamReader(is);
+                    PersistenceMetadataHolder puHolder = PersistenceUnitXmlParser.parse(xmlReader);
+                    listPUHolders.add(puHolder);
+                } catch (Exception e) {
+                    throw new DeploymentUnitProcessingException("Failed to parse " + persistence_xml, e);
+                } finally {
+                    try {
+                        if (is != null) {
+                            is.close();
+                        }
+                    } catch (IOException e) {
+                        // Ignore
+                    }
+                }
+            }
 
+            // look for persistence.xml in jar files in the WEB-INF/lib directory of a WAR file
+            List<ResourceRoot> resourceRoots = deploymentUnit.getAttachment(Attachments.RESOURCE_ROOTS);
+            assert resourceRoots != null;
+            for (ResourceRoot resourceRoot : resourceRoots) {
+                if (resourceRoot.getRoot().getLowerCaseName().endsWith(".jar")) {
+                    persistence_xml = resourceRoot.getRoot().getChild(WEB_PERSISTENCE_XML);
+                    if (persistence_xml.exists() && persistence_xml.isFile()) {
+                        InputStream is = null;
+                        try {
+                            is = persistence_xml.openStream();
+                            final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+                            inputFactory.setXMLResolver(NoopXmlResolver.create());
+                            XMLStreamReader xmlReader = inputFactory.createXMLStreamReader(is);
+                            PersistenceMetadataHolder puHolder = PersistenceUnitXmlParser.parse(xmlReader);
+                            listPUHolders.add(puHolder);
+                        } catch (Exception e) {
+                            throw new DeploymentUnitProcessingException("Failed to parse " + persistence_xml, e);
+                        } finally {
+                            try {
+                                if (is != null) {
+                                    is.close();
+                                }
+                            } catch (IOException e) {
+                                // Ignore
+                            }
+                        }
+                    }
+                }
+            }
+            PersistenceMetadataHolder holder = flatten(listPUHolders);
+            // save the persistent unit definitions for the WAR
+            deploymentUnit.putAttachment(Attachments.PERSISTENCE_UNITS, holder);
         }
+
     }
+
 
     // TODO:
     static boolean isWarDeployment(final DeploymentUnit context) {

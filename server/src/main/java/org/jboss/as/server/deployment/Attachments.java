@@ -163,6 +163,13 @@ public final class Attachments {
     // PARSE
     //
 
+    /**
+     *  List<PersistenceMetadata> that represents the JPA persistent units
+     */
+    // public static final AttachmentKey<PersistenceMetadataHolder> PERSISTENCEUNITS = AttachmentKey.create
+    // (PersistenceMetadataHolder.class);
+    public static final AttachmentKey<Object> PERSISTENCE_UNITS = AttachmentKey.create(Object.class);
+
     //
     // DEPENDENCIES
     //

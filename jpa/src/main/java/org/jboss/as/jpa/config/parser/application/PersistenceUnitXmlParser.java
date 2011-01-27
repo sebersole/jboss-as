@@ -23,10 +23,12 @@
 package org.jboss.as.jpa.config.parser.application;
 
 import org.jboss.as.jpa.config.PersistenceMetadata;
+import org.jboss.as.jpa.config.PersistenceMetadataHolder;
 import org.jboss.metadata.parser.util.MetaDataElementParser;
 
 import javax.persistence.SharedCacheMode;
 import javax.persistence.ValidationMode;
+import javax.persistence.spi.PersistenceUnitInfo;
 import javax.persistence.spi.PersistenceUnitTransactionType;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -45,7 +47,7 @@ import java.util.Properties;
  */
 public class PersistenceUnitXmlParser extends MetaDataElementParser {
 
-    public static List<PersistenceMetadata> parse(final XMLStreamReader reader) throws XMLStreamException {
+    public static PersistenceMetadataHolder parse(final XMLStreamReader reader) throws XMLStreamException {
 
         reader.require(START_DOCUMENT, null, null);  // check for a bogus document and throw error
 
@@ -102,7 +104,7 @@ public class PersistenceUnitXmlParser extends MetaDataElementParser {
                     throw unexpectedAttribute(reader, i);
             }
         }
-        final List<PersistenceMetadata> PUs = new ArrayList<PersistenceMetadata>();
+        final List<PersistenceUnitInfo> PUs = new ArrayList<PersistenceUnitInfo>();
         // until the ending PERSISTENCE tag
         while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
             final Element element = Element.forName(reader.getLocalName());
@@ -117,8 +119,7 @@ public class PersistenceUnitXmlParser extends MetaDataElementParser {
             }
         }
 
-
-        return PUs;
+        return new PersistenceMetadataHolder().setPersistenceUnits(PUs);
     }
 
     /**
@@ -287,8 +288,8 @@ public class PersistenceUnitXmlParser extends MetaDataElementParser {
                     xmlif.createXMLStreamReader(filename, new
                             FileInputStream(filename));
 
-            List<PersistenceMetadata> puList = parse(reader);
-            System.out.println("result = " + puList);
+            PersistenceMetadataHolder h = parse(reader);
+            System.out.println("result = " + h.getPersistenceUnits());
         } catch (Exception e) {
             e.printStackTrace();
         }
