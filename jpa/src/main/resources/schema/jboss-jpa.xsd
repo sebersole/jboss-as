@@ -19,6 +19,7 @@
   ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
   ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
   -->
+
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
             targetNamespace="urn:jboss:domain:jpa:1.0"
             xmlns="urn:jboss:domain:jpa:1.0"
@@ -27,9 +28,9 @@
             version="1.0">
 
     <!-- The managedbean subsystem root element -->
-    <xs:element name="subsystem" type="jpasystem"/>
+    <xs:element name="subsystem" type="subsystem"/>
 
-    <xs:complexType name="jpasystem">
+    <xs:complexType name="subsystem">
     </xs:complexType>
 
 </xs:schema>

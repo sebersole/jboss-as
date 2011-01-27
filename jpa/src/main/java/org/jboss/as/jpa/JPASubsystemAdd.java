@@ -43,7 +43,6 @@ public class JPASubsystemAdd extends AbstractSubsystemAdd<JPASubsystemElement> {
 
     @Override
     protected <P> void applyUpdate(UpdateContext updateContext, UpdateResultHandler<? super Void, P> resultHandler, P param) {
-        throw new RuntimeException("NYI: org.jboss.as.jpa.JPASubsystemAdd.applyUpdate");
     }
 
     @Override

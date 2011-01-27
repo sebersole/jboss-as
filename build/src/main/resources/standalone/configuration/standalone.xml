@@ -284,6 +284,7 @@
         <subsystem xmlns="urn:jboss:domain:deployment-scanner:1.0">
             <deployment-scanner scan-interval="5000" relative-to="jboss.server.base.dir" path="deployments" />
         </subsystem>
+        <subsystem xmlns="urn:jboss:domain:jpa:1.0"/>
     </profile>
 
     <interfaces>

@@ -257,6 +257,7 @@
               -->
             </subsystem>
             <subsystem xmlns="urn:jboss:domain:resourceadapters:1.0" />
+            <subsystem xmlns="urn:jboss:domain:jpa:1.0"/>
         </profile>
     </profiles>
 
