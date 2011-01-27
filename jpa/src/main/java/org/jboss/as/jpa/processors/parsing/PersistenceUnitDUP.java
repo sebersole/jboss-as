@@ -22,8 +22,6 @@
 
 package org.jboss.as.jpa.processors.parsing;
 
-// import static org.jboss.as.web.deployment.WarDeploymentMarker.isWarDeployment;
-
 import org.jboss.as.jpa.config.PersistenceMetadataHolder;
 import org.jboss.as.jpa.config.parser.application.PersistenceUnitXmlParser;
 import org.jboss.as.server.deployment.Attachments;

@@ -10,6 +10,7 @@
       <version>7.0.0.Alpha2-SNAPSHOT</version>
    </parent>
 
+   <groupId>org.jboss.as</groupId>
    <artifactId>jboss-as-jpa</artifactId>
    <version>7.0.0.Alpha2-SNAPSHOT</version>
 

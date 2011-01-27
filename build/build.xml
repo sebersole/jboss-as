@@ -295,6 +295,10 @@
             <maven-resource group="org.jboss.as" artifact="jboss-as-jmx"/>
         </module-def>
 
+        <module-def name="org.jboss.as.jpa">
+            <maven-resource group="org.jboss.as" artifact="jboss-as-jpa"/>
+        </module-def>
+
         <module-def name="org.jboss.as.logging">
             <maven-resource group="org.jboss.as" artifact="jboss-as-logging"/>
         </module-def>
