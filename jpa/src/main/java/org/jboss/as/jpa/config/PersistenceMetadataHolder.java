@@ -34,6 +34,8 @@ import java.util.List;
  */
 public class PersistenceMetadataHolder {
 
+    // TODO:  deal with serializing PersistenceMetadataHolder in coordination with the PU service
+
     /**
      *  List<PersistenceMetadata> that represents the JPA persistent units
      */
@@ -48,5 +50,13 @@ public class PersistenceMetadataHolder {
     public PersistenceMetadataHolder setPersistenceUnits(List<PersistenceUnitInfo> persistenceUnits) {
         this.persistenceUnits = persistenceUnits;
         return this;
+    }
+
+    public String toString() {
+        StringBuffer result = new StringBuffer();
+        for(PersistenceUnitInfo pu: persistenceUnits) {
+            result.append(pu.toString());
+        }
+        return result.toString();
     }
 }

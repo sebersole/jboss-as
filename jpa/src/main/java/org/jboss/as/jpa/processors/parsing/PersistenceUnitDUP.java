@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Persistence unit deployment unit processor
@@ -51,6 +52,8 @@ import java.util.Map;
 public class PersistenceUnitDUP implements DeploymentUnitProcessor {
 
     private static final String WEB_PERSISTENCE_XML = "WEB-INF/classes/META-INF/persistence.xml";
+    private static final String META_INF_PERSISTENCE_XML = "META-INF/persistence.xml";
+    private static final Logger log = Logger.getLogger("org.jboss.jpa");
 
     @Override
     public void deploy(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
@@ -122,7 +125,7 @@ public class PersistenceUnitDUP implements DeploymentUnitProcessor {
             assert resourceRoots != null;
             for (ResourceRoot resourceRoot : resourceRoots) {
                 if (resourceRoot.getRoot().getLowerCaseName().endsWith(".jar")) {
-                    persistence_xml = resourceRoot.getRoot().getChild(WEB_PERSISTENCE_XML);
+                    persistence_xml = resourceRoot.getRoot().getChild(META_INF_PERSISTENCE_XML);
                     if (persistence_xml.exists() && persistence_xml.isFile()) {
                         InputStream is = null;
                         try {

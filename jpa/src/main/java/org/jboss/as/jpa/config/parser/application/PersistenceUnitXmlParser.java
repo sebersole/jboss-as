@@ -37,6 +37,8 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Parse a persistence.xml into a list of persistence unit definitions.
@@ -46,6 +48,7 @@ import java.util.Properties;
  * @author Scott Marlow
  */
 public class PersistenceUnitXmlParser extends MetaDataElementParser {
+    private static final Logger log = Logger.getLogger("org.jboss.jpa");
 
     public static PersistenceMetadataHolder parse(final XMLStreamReader reader) throws XMLStreamException {
 
@@ -98,7 +101,8 @@ public class PersistenceUnitXmlParser extends MetaDataElementParser {
             final Attribute attribute = Attribute.forName(reader.getAttributeLocalName(i));
             switch (attribute) {
                 case VERSION:
-                    System.out.println("version = " + value);
+                    // log.info("version = " + value);
+                    // TODO:  handle version
                     break;
                 default:
                     throw unexpectedAttribute(reader, i);
@@ -118,8 +122,10 @@ public class PersistenceUnitXmlParser extends MetaDataElementParser {
                     throw unexpectedElement(reader);
             }
         }
-
-        return new PersistenceMetadataHolder().setPersistenceUnits(PUs);
+        PersistenceMetadataHolder result = new PersistenceMetadataHolder().setPersistenceUnits(PUs);
+        if (log.isLoggable(Level.FINEST))
+            log.finest(result.toString());
+        return result;
     }
 
     /**
