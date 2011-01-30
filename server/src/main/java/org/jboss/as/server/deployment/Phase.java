@@ -266,7 +266,7 @@ public enum Phase {
     public static final int INSTALL_SERVLET_INIT_DEPLOYMENT             = 0x1300;
     public static final int INSTALL_WAR_DEPLOYMENT                      = 0x1400;
     public static final int INSTALL_ARQUILLIAN_DEPLOYMENT               = 0x1500;
-
+    public static final int INSTALL_PERSISTENTUNIT                      = 0x1600;
     // CLEANUP
     public static final int CLEANUP_REFLECTION_INDEX                    = 0x100;
 }
