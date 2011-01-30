@@ -29,11 +29,18 @@
     </resources>
 
     <dependencies>
+        <module name="antlr.antlr"/>
+        <module name="asm.asm"/>
+        <module name="cglib.cglib"/>
+        <module name="commons-collections.commons-collections"/>
+        <module name="dom4j.dom4j"/>
         <module name="javax.annotation.api"/>
         <module name="javax.api"/>
         <module name="javax.persistence.api"/>
         <module name="javax.resource.api"/>
         <module name="javax.transaction.api"/>
+        <module name="org.hibernate.hibernate"/>
+        <module name="org.javassist"/>
         <module name="org.jboss.as.domain"/>
         <module name="org.jboss.as.ee"/>
         <module name="org.jboss.as.naming"/>
@@ -52,5 +59,6 @@
         <module name="org.jboss.threads"/>
         <module name="org.jboss.metadata"/>
         <module name="org.jboss.vfs"/>
+        <module name="org.slf4j.slf4j-api"/>
     </dependencies>
 </module>
