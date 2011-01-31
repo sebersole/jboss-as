@@ -57,6 +57,12 @@ public class PersistenceUnitDUP implements DeploymentUnitProcessor {
 
     @Override
     public void deploy(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
+
+        // TODO:  handle JPA section 9.1
+        // Note that the entity classes must not be loaded until after the EntityManagerFactory is created.
+        // Therefore, make sure the entity classes aren't loaded/scanned for annotations by anything but the persistence
+        // provider.
+
         handleWarDeployment(phaseContext);
 
         // TODO:  handle an EJB-JAR file
@@ -73,6 +79,7 @@ public class PersistenceUnitDUP implements DeploymentUnitProcessor {
     @Override
     public void undeploy(DeploymentUnit context) {
         // TODO:  undeploy
+        // TODO:  handle JPA section 9.1 by calling EntityManagerFactory.close()
     }
 
     private PersistenceMetadataHolder flatten(List<PersistenceMetadataHolder>listPUHolders) {
@@ -120,7 +127,7 @@ public class PersistenceUnitDUP implements DeploymentUnitProcessor {
                 }
             }
 
-            // look for persistence.xml in jar files in the WEB-INF/lib directory of a WAR file
+            // look for persistence.xml in jar files in the META-INF/persistence.xml directory
             List<ResourceRoot> resourceRoots = deploymentUnit.getAttachment(Attachments.RESOURCE_ROOTS);
             assert resourceRoots != null;
             for (ResourceRoot resourceRoot : resourceRoots) {
