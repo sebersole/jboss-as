@@ -148,6 +148,8 @@ public class PersistenceUnitDUP implements DeploymentUnitProcessor {
                     parse(persistence_xml, listPUHolders);
                 }
                 else if (resourceRoot.getRoot().getLowerCaseName().endsWith(".war")) {
+                    // TODO:  delete this entire else block after EAR deployment support is complete
+                    // as the war will be deployed as a separate subdeployment with the ear as its parent.
                     persistence_xml = resourceRoot.getRoot().getChild(WEB_PERSISTENCE_XML);
                     parse(persistence_xml, listPUHolders);
 
@@ -197,7 +199,9 @@ public class PersistenceUnitDUP implements DeploymentUnitProcessor {
         }
     }
 
-    // TODO:  FIX ME.  this is the wrong approach, we cannot flatten by name, instead we
+    // TODO:  FIX ME.  this is the wrong approach, we cannot flatten by name, instead we need to
+    // associate the PU with the containing component.  Then we can do proper determination
+    // of which PU to use (and support # references).
     //
     // as6 example of a scoped pu reference:
     // persistence.unit:unitName=ejb3_ext_propagation.ear/lib/ejb3_ext_propagation.jar#CTS-EXT-UNIT
