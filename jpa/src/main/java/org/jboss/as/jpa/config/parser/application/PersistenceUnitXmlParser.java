@@ -123,8 +123,8 @@ public class PersistenceUnitXmlParser extends MetaDataElementParser {
             }
         }
         PersistenceMetadataHolder result = new PersistenceMetadataHolder().setPersistenceUnits(PUs);
-        if (log.isLoggable(Level.FINEST))
-            log.finest(result.toString());
+        if (log.isLoggable(Level.INFO))
+            log.info(result.toString());
         return result;
     }
 
