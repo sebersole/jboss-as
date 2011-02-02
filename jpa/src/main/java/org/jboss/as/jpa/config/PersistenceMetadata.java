@@ -234,6 +234,7 @@ public class PersistenceMetadata implements PersistenceUnitInfo {
                 sb.append("\t\t").append(elt).append("\n");
             }
         }
+        sb.append("\t]\n");
         if (validationMode != null) {
             sb.append("\tvalidation-mode: ").append(validationMode).append("\n");
         }

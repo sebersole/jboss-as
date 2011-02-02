@@ -94,9 +94,10 @@ public class PersistenceUnitDUP implements DeploymentUnitProcessor {
             final ResourceRoot deploymentRoot = deploymentUnit.getAttachment(Attachments.DEPLOYMENT_ROOT);
             VirtualFile persistence_xml = deploymentRoot.getRoot().getChild(META_INF_PERSISTENCE_XML);
             parse(persistence_xml, listPUHolders);
-            PersistenceMetadataHolder holder = flatten(listPUHolders);
-            // save the persistent unit definitions for the WAR
-            deploymentUnit.putAttachment(PersistenceMetadataHolder.PERSISTENCE_UNITS, holder);
+            PersistenceMetadataHolder holder = normalize(listPUHolders);
+            // save the persistent unit definitions
+            // deploymentUnit.putAttachment(PersistenceMetadataHolder.PERSISTENCE_UNITS, holder);
+            deploymentRoot.putAttachment(PersistenceMetadataHolder.PERSISTENCE_UNITS, holder);
             }
         }
 
@@ -110,19 +111,19 @@ public class PersistenceUnitDUP implements DeploymentUnitProcessor {
             final ResourceRoot deploymentRoot = deploymentUnit.getAttachment(Attachments.DEPLOYMENT_ROOT);
             VirtualFile persistence_xml = deploymentRoot.getRoot().getChild(WEB_PERSISTENCE_XML);
             parse(persistence_xml, listPUHolders);
+            deploymentRoot.putAttachment(PersistenceMetadataHolder.PERSISTENCE_UNITS,  normalize(listPUHolders));
 
             // look for persistence.xml in jar files in the META-INF/persistence.xml directory
             List<ResourceRoot> resourceRoots = deploymentUnit.getAttachment(Attachments.RESOURCE_ROOTS);
             assert resourceRoots != null;
             for (ResourceRoot resourceRoot : resourceRoots) {
                 if (resourceRoot.getRoot().getLowerCaseName().endsWith(".jar")) {
+                    listPUHolders = new ArrayList<PersistenceMetadataHolder>(1);
                     persistence_xml = resourceRoot.getRoot().getChild(META_INF_PERSISTENCE_XML);
                     parse(persistence_xml, listPUHolders);
+                    resourceRoot.putAttachment(PersistenceMetadataHolder.PERSISTENCE_UNITS, normalize(listPUHolders));
                 }
             }
-            PersistenceMetadataHolder holder = flatten(listPUHolders);
-            // save the persistent unit definitions for the WAR
-            deploymentUnit.putAttachment(PersistenceMetadataHolder.PERSISTENCE_UNITS, holder);
         }
     }
 
@@ -135,6 +136,7 @@ public class PersistenceUnitDUP implements DeploymentUnitProcessor {
             final ResourceRoot deploymentRoot = deploymentUnit.getAttachment(Attachments.DEPLOYMENT_ROOT);
             VirtualFile persistence_xml = deploymentRoot.getRoot().getChild(META_INF_PERSISTENCE_XML);
             parse(persistence_xml, listPUHolders);
+            deploymentRoot.putAttachment(PersistenceMetadataHolder.PERSISTENCE_UNITS, normalize(listPUHolders));
 
             // TODO: refactor handleWarDeployment/handleJarDeployment and the following code to share same logic.
             // after proving that handleEarDeployment works (handleWarDeployment/handleJarDeployment currently work).
@@ -144,14 +146,18 @@ public class PersistenceUnitDUP implements DeploymentUnitProcessor {
             assert resourceRoots != null;
             for (ResourceRoot resourceRoot : resourceRoots) {
                 if (resourceRoot.getRoot().getLowerCaseName().endsWith(".jar")) {
+                    listPUHolders = new ArrayList<PersistenceMetadataHolder>(1);
                     persistence_xml = resourceRoot.getRoot().getChild(META_INF_PERSISTENCE_XML);
                     parse(persistence_xml, listPUHolders);
+                    resourceRoot.putAttachment(PersistenceMetadataHolder.PERSISTENCE_UNITS, normalize(listPUHolders));
                 }
                 else if (resourceRoot.getRoot().getLowerCaseName().endsWith(".war")) {
-                    // TODO:  delete this entire else block after EAR deployment support is complete
+                    // TODO:  delete this entire else block after war subdeployments are working
                     // as the war will be deployed as a separate subdeployment with the ear as its parent.
+                    listPUHolders = new ArrayList<PersistenceMetadataHolder>(1);
                     persistence_xml = resourceRoot.getRoot().getChild(WEB_PERSISTENCE_XML);
                     parse(persistence_xml, listPUHolders);
+                    resourceRoot.putAttachment(PersistenceMetadataHolder.PERSISTENCE_UNITS,  normalize(listPUHolders));
 
                     // look for persistence.xml in jar files in the META-INF/persistence.xml directory
                     List<VirtualFile> jars;
@@ -164,12 +170,13 @@ public class PersistenceUnitDUP implements DeploymentUnitProcessor {
 
                     assert jars != null;
                     for (VirtualFile jar : jars) {
-                            persistence_xml = jar.getChild(META_INF_PERSISTENCE_XML);
-                            parse(persistence_xml, listPUHolders);
+                        // TODO:  this will all occur in war subdeployment, but if not, need to attach to a resource...
+                        persistence_xml = jar.getChild(META_INF_PERSISTENCE_XML);
+                        parse(persistence_xml, listPUHolders);
                         }
                     }
                 }
-            PersistenceMetadataHolder holder = flatten(listPUHolders);
+            PersistenceMetadataHolder holder = normalize(listPUHolders);
             // save the persistent unit definitions for the WAR
             deploymentUnit.putAttachment(PersistenceMetadataHolder.PERSISTENCE_UNITS, holder);
         }
@@ -199,42 +206,20 @@ public class PersistenceUnitDUP implements DeploymentUnitProcessor {
         }
     }
 
-    // TODO:  FIX ME.  this is the wrong approach, we cannot flatten by name, instead we need to
-    // associate the PU with the containing component.  Then we can do proper determination
-    // of which PU to use (and support # references).
-    //
-    // as6 example of a scoped pu reference:
-    // persistence.unit:unitName=ejb3_ext_propagation.ear/lib/ejb3_ext_propagation.jar#CTS-EXT-UNIT
-    // The above was associated with the injected EM referencing PU name=CTS-EXT-UNIT
     /**
-     *  8.2.2 Persistence Unit Scope
-     *
-     * An EJB-JAR, WAR, application client jar, or EAR can define a persistence unit.  When referencing a persistence unit using
-     * the unitName annotation element or persis-tence-unit-name deployment descriptor element, the visibility scope of the
-     * persistence unit is determined by its point of definition
-     *
-     * A persistence unit that is defined at the level of an EJB-JAR, WAR, or application client jar is scoped to that EJB-JAR,
-     * WAR, or application jar respectively and is visible to the components defined in that jar or war.
-     *
-     * A persistence unit that is defined at the level of the EAR is generally visible to all components in the application.
-     * However, if a persistence unit of the same name is defined by an EJB-JAR, WAR, or application jar file within the EAR,
-     * the persistence unit of that name defined at EAR level will not be visible to the components defined by that EJB-JAR,
-     * WAR, or application jar file unless the persistence unit reference uses the persistence unit name # syntax to specify
-     * a path name to disambiguate the reference. When the # syntax is used, the path name is relative to the referencing
-     * application component jar file. For example, the syntax ../lib/persistenceUnitRoot.jar#myPersistenceUnit refers to a
-     * persistence unit whose name, as specified in the name element of the persistence.xml file, is myPersistenceUnit and for
-     * which the relative path name of the root of the persistence unit is ../lib/persistenceUnitRoot.jar. The # syntax may be
-     * used with both the unitName annotation element or persistence-unit-name deployment descriptor element to reference a
-     * persistence unit defined at EAR level.
-     *
+     * Eliminate duplicate PU definitions from clustering the deployment (first definition will win)
+     * @param listPUHolders
+     * @return
      */
-    private PersistenceMetadataHolder flatten(List<PersistenceMetadataHolder>listPUHolders) {
+    private PersistenceMetadataHolder normalize(List<PersistenceMetadataHolder> listPUHolders) {
         // eliminate duplicates (keeping the first instance of each PU by name)
         Map<String, PersistenceUnitInfo> flattened = new HashMap<String,PersistenceUnitInfo>();
         for (PersistenceMetadataHolder puHolder : listPUHolders ) {
             for (PersistenceUnitInfo pu: puHolder.getPersistenceUnits()) {
                 if(!flattened.containsKey(pu.getPersistenceUnitName()))
                     flattened.put(pu.getPersistenceUnitName(), pu);
+                else
+                    log.info("ignoring duplicate Persistence Unit definition for " + pu.getPersistenceUnitName());
             }
         }
         PersistenceMetadataHolder holder = new PersistenceMetadataHolder();

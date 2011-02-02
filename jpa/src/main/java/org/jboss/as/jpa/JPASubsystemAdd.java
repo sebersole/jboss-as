@@ -43,15 +43,13 @@ public class JPASubsystemAdd extends AbstractSubsystemAdd<JPASubsystemElement> {
 
     @Override
     protected <P> void applyUpdate(UpdateContext updateContext, UpdateResultHandler<? super Void, P> resultHandler, P param) {
+
     }
 
     @Override
     protected void applyUpdateBootAction(BootUpdateContext updateContext) {
 
         JPADeploymentActivator.activate(updateContext);
-
-        // TODO:  figure out what the deal is with the following call, which calls the above applyUpdate().
-        //        WebSubsystemAdd doesn't call super.applyUpdateBootAction, maybe we shouldn't either?
         super.applyUpdateBootAction(updateContext);
     }
 
