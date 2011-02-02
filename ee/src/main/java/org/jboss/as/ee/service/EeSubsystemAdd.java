@@ -22,10 +22,14 @@
 
 package org.jboss.as.ee.service;
 
-import org.jboss.as.ee.container.processor.BeanContainerInstallProcessor;
-import org.jboss.as.ee.container.processor.InterceptorAnnotationParsingProcessor;
-import org.jboss.as.ee.container.processor.LifecycleAnnotationParsingProcessor;
-import org.jboss.as.ee.container.processor.ResourceInjectionAnnotationParsingProcessor;
+import org.jboss.as.ee.component.processor.ComponentClassLoadingProcessor;
+import org.jboss.as.ee.component.processor.ComponentInstallProcessor;
+import org.jboss.as.ee.component.processor.InterceptorAnnotationParsingProcessor;
+import org.jboss.as.ee.component.processor.InterceptorInstallProcessor;
+import org.jboss.as.ee.component.processor.LifecycleAnnotationParsingProcessor;
+import org.jboss.as.ee.component.processor.LifecycleInstallProcessor;
+import org.jboss.as.ee.component.processor.ResourceInjectionAnnotationParsingProcessor;
+import org.jboss.as.ee.component.processor.ResourceInjectionInstallProcessor;
 import org.jboss.as.ee.naming.ApplicationContextProcessor;
 import org.jboss.as.ee.naming.ModuleContextProcessor;
 import org.jboss.as.ee.structure.EarMetaDataParsingProcessor;
@@ -71,7 +75,12 @@ public final class EeSubsystemAdd extends AbstractSubsystemAdd<EeSubsystemElemen
 
         updateContext.addDeploymentProcessor(Phase.INSTALL, Phase.INSTALL_MODULE_CONTEXT, new ModuleContextProcessor());
         updateContext.addDeploymentProcessor(Phase.INSTALL, Phase.INSTALL_APP_CONTEXT, new ApplicationContextProcessor());
-        updateContext.addDeploymentProcessor(Phase.INSTALL, Phase.INSTALL_BEAN_CONTAINER, new BeanContainerInstallProcessor());
+
+        updateContext.addDeploymentProcessor(Phase.INSTALL, Phase.INSTALL_EE_COMPONENT_CLASSLOAD, new ComponentClassLoadingProcessor());
+        updateContext.addDeploymentProcessor(Phase.INSTALL, Phase.INSTALL_EE_COMPONENT_LIFECYCLES, new LifecycleInstallProcessor());
+        updateContext.addDeploymentProcessor(Phase.INSTALL, Phase.INSTALL_EE_COMPONENT_INTERCEPTORS, new InterceptorInstallProcessor());
+        updateContext.addDeploymentProcessor(Phase.INSTALL, Phase.INSTALL_EE_COMPONENT_INJECTIONS, new ResourceInjectionInstallProcessor());
+        updateContext.addDeploymentProcessor(Phase.INSTALL, Phase.INSTALL_EE_COMPONENT, new ComponentInstallProcessor());
     }
 
     @Override

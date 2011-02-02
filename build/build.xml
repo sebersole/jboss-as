@@ -74,6 +74,11 @@
             <maven-resource group="com.google.guava" artifact="guava" />
         </module-def>
 
+        <module-def name="com.sun.xml.bind">
+            <maven-resource group="com.sun.xml.bind" artifact="jaxb-impl"/>
+            <maven-resource group="com.sun.xml.bind" artifact="jaxb-xjc"/>
+        </module-def>
+
         <module-def name="javaee.api"/>
 
         <module-def name="javax.api"/>
@@ -198,6 +203,44 @@
 
     	<module-def name="org.apache.commons.logging"/>
     	
+        <module-def name="org.apache.cxf">
+            <maven-resource group="org.apache.cxf" artifact="cxf-api"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-common-schemas"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-common-utilities"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-bindings-coloc"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-bindings-http"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-bindings-object"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-bindings-soap"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-bindings-xml"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-core"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-databinding-aegis"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-databinding-jaxb"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-frontend-jaxws"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-frontend-simple"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-management"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-transports-http"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-transports-jms"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-transports-local"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-ws-addr"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-ws-policy"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-ws-rm"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-rt-ws-security"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-tools-common"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-tools-java2ws"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-tools-validator"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-tools-wsdlto-core"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-tools-wsdlto-databinding-jaxb"/>
+            <maven-resource group="org.apache.cxf" artifact="cxf-tools-wsdlto-frontend-jaxws"/>
+            <maven-resource group="org.apache.cxf.xjcplugins" artifact="cxf-xjc-boolean"/>
+            <maven-resource group="org.apache.cxf.xjcplugins" artifact="cxf-xjc-bug671"/>
+            <maven-resource group="org.apache.cxf.xjcplugins" artifact="cxf-xjc-dv"/>
+            <maven-resource group="org.apache.cxf.xjcplugins" artifact="cxf-xjc-ts"/>
+        </module-def>
+
+        <module-def name="org.apache.neethi">
+            <maven-resource group="org.apache.neethi" artifact="neethi"/>
+        </module-def>
+
         <module-def name="org.apache.felix.configadmin">
             <maven-resource group="org.apache.felix" artifact="org.apache.felix.configadmin"/>
         </module-def>
@@ -210,6 +253,10 @@
 
         <module-def name="javax.persistence.api">
             <maven-resource group="org.hibernate.javax.persistence" artifact="hibernate-jpa-2.0-api" />
+        </module-def>
+
+    	<module-def name="org.apache.ws.commons.xmlschema">
+            <maven-resource group="org.apache.ws.commons.schema" artifact="XmlSchema"/>
         </module-def>
 
         <module-def name="org.hibernate.validator">
@@ -248,17 +295,21 @@
         <module-def name="org.jboss.arquillian.spi">
             <maven-resource group="org.jboss.arquillian" artifact="arquillian-spi"/>
         </module-def>
-        
+
+        <module-def name="org.jboss.arquillian.testenricher.cdi">
+            <maven-resource group="org.jboss.arquillian.testenricher" artifact="arquillian-testenricher-cdi"/>
+        </module-def>
+
         <module-def name="org.jboss.arquillian.testenricher.msc">
             <maven-resource group="org.jboss.arquillian.testenricher" artifact="arquillian-testenricher-msc"/>
         </module-def>
 
-    	<module-def name="org.jboss.arquillian.testenricher.osgi">
+        <module-def name="org.jboss.arquillian.testenricher.osgi">
             <maven-resource group="org.jboss.arquillian.testenricher" artifact="arquillian-testenricher-osgi"/>
         </module-def>
         
-    	<module-def name="org.jboss.as.aggregate" />
-    	
+        <module-def name="org.jboss.as.aggregate" />
+
         <module-def name="org.jboss.as.arquillian.service">
             <maven-resource group="org.jboss.as" artifact="jboss-as-arquillian-service"/>
         </module-def>
@@ -289,6 +340,10 @@
 
         <module-def name="org.jboss.as.ee">
             <maven-resource group="org.jboss.as" artifact="jboss-as-ee"/>
+        </module-def>
+
+        <module-def name="org.jboss.as.ejb3">
+            <maven-resource group="org.jboss.as" artifact="jboss-as-ejb3"/>
         </module-def>
 
         <module-def name="org.jboss.as.host-controller">
@@ -363,6 +418,12 @@
             <maven-resource group="org.jboss.web" artifact="jbossweb"/>
         </module-def>
 
+        <module-def name="org.jboss.as.webservices">
+            <maven-resource group="org.jboss.as" artifact="jboss-as-webservices"/>
+            <maven-resource group="org.jboss.metadata" artifact="jboss-metadata-common"/>
+            <maven-resource-with-classifier group="org.jboss.ws.cxf" artifact="jbossws-cxf-resources" classifier="jboss700"/>
+        </module-def>
+
         <module-def name="org.jboss.as.weld">
             <maven-resource group="org.jboss.as" artifact="jboss-as-weld"/>
         </module-def>
@@ -371,10 +432,8 @@
             <maven-resource group="org.jboss.as" artifact="jboss-as-threads"/>
         </module-def>
 
-        <module-def name="org.jboss.metadata">
-            <maven-resource group="org.jboss.metadata" artifact="jboss-metadata-common"/>
-            <maven-resource group="org.jboss.metadata" artifact="jboss-metadata-web"/>
-            <maven-resource group="org.jboss.metadata" artifact="jboss-metadata-ear"/>
+        <module-def name="org.jboss.classfilewriter">
+            <maven-resource group="org.jboss.classfilewriter" artifact="jboss-classfilewriter"/>
         </module-def>
 
         <module-def name="org.jboss.common-core">
@@ -395,6 +454,10 @@
 
         <module-def name="org.jboss.interceptor.spi">
             <maven-resource group="org.jboss.interceptor" artifact="jboss-interceptor-spi"/>
+        </module-def>
+
+        <module-def name="org.jboss.invocation">
+            <maven-resource group="org.jboss.invocation" artifact="jboss-invocation"/>
         </module-def>
 
         <module-def name="org.jboss.ironjacamar.api">
@@ -441,6 +504,12 @@
 
         <module-def name="org.jboss.marshalling.river">
             <maven-resource group="org.jboss.marshalling" artifact="jboss-marshalling-river"/>
+        </module-def>
+
+        <module-def name="org.jboss.metadata">
+            <maven-resource group="org.jboss.metadata" artifact="jboss-metadata-common"/>
+            <maven-resource group="org.jboss.metadata" artifact="jboss-metadata-web"/>
+            <maven-resource group="org.jboss.metadata" artifact="jboss-metadata-ear"/>
         </module-def>
 
         <module-def name="org.jboss.modules"/>
@@ -533,6 +602,34 @@
             <maven-resource group="org.jboss.weld" artifact="weld-spi"/>
         </module-def>
 
+        <module-def name="org.jboss.ws.common">
+            <maven-resource group="org.jboss.ws" artifact="jbossws-common"/>
+        </module-def>
+
+        <module-def name="org.jboss.ws.cxf.jbossws-cxf-client">
+            <maven-resource group="org.jboss.ws.cxf" artifact="jbossws-cxf-client"/>
+        </module-def>
+
+        <module-def name="org.jboss.ws.cxf.jbossws-cxf-factories">
+            <maven-resource group="org.jboss.ws.cxf" artifact="jbossws-cxf-factories"/>
+        </module-def>
+
+        <module-def name="org.jboss.ws.cxf.jbossws-cxf-server">
+            <maven-resource group="org.jboss.ws.cxf" artifact="jbossws-cxf-server"/>
+        </module-def>
+
+        <module-def name="org.jboss.ws.cxf.jbossws-cxf-transports-httpserver">
+            <maven-resource group="org.jboss.ws.cxf" artifact="jbossws-cxf-transports-httpserver"/>
+        </module-def>
+
+        <module-def name="org.jboss.ws.api">
+            <maven-resource group="org.jboss.ws" artifact="jbossws-api"/>
+        </module-def>
+
+        <module-def name="org.jboss.ws.spi">
+            <maven-resource group="org.jboss.ws" artifact="jbossws-spi"/>
+        </module-def>
+
         <module-def name="org.jboss.xnio">
             <maven-resource group="org.jboss.xnio" artifact="xnio-api"/>
         </module-def>
@@ -571,6 +668,9 @@
            <maven-resource group="org.slf4j" artifact="slf4j-ext"/>
         </module-def>
 
+        <module-def name="wsdl4j.wsdl4j">
+            <maven-resource group="wsdl4j" artifact="wsdl4j"/>
+        </module-def>
     </target>
 
     <target name="clean-target">

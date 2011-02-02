@@ -93,6 +93,9 @@ public class WeldDeploymentProcessor implements DeploymentUnitProcessor {
 
         final List<BeanDeploymentArchiveImpl> beanDeploymentArchives = deploymentUnit
                 .getAttachment(BeanDeploymentArchiveImpl.ATTACHMENT_KEY);
+        deploymentUnit.removeAttachment(BeanDeploymentArchiveImpl.ATTACHMENT_KEY);
+
+        BeanDeploymentArchiveImpl rootBda = deploymentUnit.getAttachment(BeanDeploymentArchiveImpl.ROOT_ARCHIVE_ATTACHMENT_KEY);
 
         // all bean deployment archives are accessible to each other
         // TODO: add proper accessibility rules
@@ -110,7 +113,7 @@ public class WeldDeploymentProcessor implements DeploymentUnitProcessor {
         }
 
         final WeldDeployment deployment = new WeldDeployment(new HashSet<BeanDeploymentArchiveImpl>(beanDeploymentArchives),
-                extensions, module);
+                rootBda, extensions, module);
 
         final WeldContainer weldContainer = new WeldContainer(deployment, Environments.EE_INJECT);
 
@@ -131,7 +134,7 @@ public class WeldDeploymentProcessor implements DeploymentUnitProcessor {
 
         // add the BeanManager service
         final ServiceName beanManagerServiceName = deploymentUnit.getServiceName().append(BeanManagerService.NAME);
-        BeanManagerService beanManagerService = new BeanManagerService(deployment.getAdditionalBeanDeploymentArchive().getId());
+        BeanManagerService beanManagerService = new BeanManagerService(deployment.getTopLevelBeanDeploymentArchive().getId());
         serviceTarget.addService(beanManagerServiceName, beanManagerService).addDependency(weldServiceName,
                 WeldContainer.class, beanManagerService.getWeldContainer()).install();
 

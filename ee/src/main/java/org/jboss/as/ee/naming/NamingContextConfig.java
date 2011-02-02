@@ -36,7 +36,6 @@ public class NamingContextConfig {
      * Create a new instance.
      *
      * @param contextServiceName The context service name
-     * @param contextName The context jndi name.
      */
     public NamingContextConfig(ServiceName contextServiceName) {
         this.contextServiceName = contextServiceName;

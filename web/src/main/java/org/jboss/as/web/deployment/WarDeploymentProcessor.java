@@ -26,15 +26,12 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
-import javax.naming.Context;
-
 import org.apache.catalina.Host;
 import org.apache.catalina.Loader;
 import org.apache.catalina.Realm;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.ContextConfig;
 import org.apache.tomcat.InstanceManager;
-import org.jboss.as.ee.naming.ContextServiceNameBuilder;
 import org.jboss.as.ee.naming.NamespaceSelectorService;
 import org.jboss.as.server.deployment.Attachments;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
@@ -77,12 +74,12 @@ public class WarDeploymentProcessor implements DeploymentUnitProcessor {
         if(hostNames == null || hostNames.isEmpty()) {
             hostNames = Collections.singleton(defaultHost);
         }
-        for(final String hostName : hostNames) {
-            if(hostName == null) {
-                throw new IllegalStateException("null host name");
-            }
-            processDeployment(hostName, metaData, deploymentUnit, phaseContext.getServiceTarget());
+        String hostName = hostNames.iterator().next();
+        // FIXME: Support automagic aliases ?
+        if (hostName == null) {
+            throw new IllegalStateException("null host name");
         }
+        processDeployment(hostName, metaData, deploymentUnit, phaseContext.getServiceTarget());
     }
 
     public void undeploy(final DeploymentUnit context) {
@@ -155,19 +152,8 @@ public class WarDeploymentProcessor implements DeploymentUnitProcessor {
            metaDataSecurityDomain = metaDataSecurityDomain.trim();
         }
 
-        //Add the namespace selector service
-        ServiceName appNs = ContextServiceNameBuilder.app(deploymentUnit);
-        ServiceName moduleNs = ContextServiceNameBuilder.module(deploymentUnit);
-        ServiceName namespaceSelectorServiceName = deploymentUnit.getServiceName().append(NamespaceSelectorService.NAME);
-        NamespaceSelectorService namespaceSelector = new NamespaceSelectorService();
-        serviceTarget.addService(namespaceSelectorServiceName, namespaceSelector)
-            .addDependency(appNs, Context.class,namespaceSelector.getApp())
-            .addDependency(moduleNs, Context.class,namespaceSelector.getModule())
-            .addDependency(moduleNs, Context.class,namespaceSelector.getComp())
-            .install();
-
-        // Add the context service
         try {
+            ServiceName namespaceSelectorServiceName = deploymentUnit.getServiceName().append(NamespaceSelectorService.NAME);
             WebDeploymentService webDeploymentService = new WebDeploymentService(webContext);
             serviceTarget.addService(WebSubsystemElement.JBOSS_WEB.append(deploymentName), webDeploymentService)
                 .addDependency(WebSubsystemElement.JBOSS_WEB_HOST.append(hostName), Host.class, new WebContextInjector(webContext))

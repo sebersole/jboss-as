@@ -31,7 +31,9 @@ import java.util.UUID;
  *
  * @author Brian Stansberry
  */
-public abstract class AbstractServerUpdateActionResult<T extends ServerUpdateActionResult> implements ServerUpdateActionResult {
+public abstract class AbstractServerUpdateActionResult<T extends ServerUpdateActionResult> implements ServerUpdateActionResult, java.io.Serializable {
+
+    private static final long serialVersionUID = -4692787126053225682L;
 
     private final UUID id;
     private Result result;
