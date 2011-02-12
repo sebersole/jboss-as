@@ -21,11 +21,20 @@
  */
 package org.jboss.as.jpa.subsystem;
 
-import org.jboss.as.jpa.persistenceprovider.PersistenceProviderResolverImpl;
-import org.jboss.as.model.AbstractSubsystemAdd;
-import org.jboss.as.model.BootUpdateContext;
-import org.jboss.as.model.UpdateContext;
-import org.jboss.as.model.UpdateResultHandler;
+import org.jboss.as.controller.Cancellable;
+import org.jboss.as.controller.ModelAddOperationHandler;
+import org.jboss.as.controller.OperationContext;
+import org.jboss.as.controller.ResultHandler;
+import org.jboss.as.jpa.processor.PersistenceUnitDeploymentProcessor;
+import org.jboss.as.jpa.processor.PersistenceUnitParseProcessor;
+import org.jboss.as.server.BootOperationContext;
+import org.jboss.as.server.BootOperationHandler;
+import org.jboss.as.server.deployment.Phase;
+import org.jboss.dmr.ModelNode;
+
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP_ADDR;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.REMOVE;
 
 /**
  * Add the JPA subsystem directive.
@@ -34,37 +43,34 @@ import org.jboss.as.model.UpdateResultHandler;
  *
  * @author Scott Marlow
  */
-public class JPASubsystemAdd extends AbstractSubsystemAdd<JPASubsystemElement> {
-    private JBossAssemblyDescriptor assemblyDescriptor;
+class JPASubsystemAdd implements ModelAddOperationHandler, BootOperationHandler {
 
-    protected JPASubsystemAdd() {
-        super(JPASubsystemParser.NAMESPACE);
+    static final JPASubsystemAdd INSTANCE = new JPASubsystemAdd();
+
+    private JPASubsystemAdd() {
+        //
     }
 
+    /** {@inheritDoc} */
     @Override
-    protected <P> void applyUpdate(UpdateContext updateContext, UpdateResultHandler<? super Void, P> resultHandler, P param) {
+    public Cancellable execute(OperationContext context, ModelNode operation, ResultHandler resultHandler) {
 
+        if(context instanceof BootOperationContext) {
+            final BootOperationContext updateContext = (BootOperationContext) context;
+            updateContext.addDeploymentProcessor(Phase.PARSE, Phase.PARSE_PERSISTENTUNIT, new PersistenceUnitParseProcessor());
+            updateContext.addDeploymentProcessor(Phase.INSTALL, Phase.INSTALL_PERSISTENTUNIT, new PersistenceUnitDeploymentProcessor());
+        }
+
+        final ModelNode compensatingOperation = new ModelNode();
+        compensatingOperation.get(OP).set(REMOVE);
+        compensatingOperation.get(OP_ADDR).set(operation.require(OP_ADDR));
+
+        context.getSubModel().setEmptyObject();
+
+        resultHandler.handleResultComplete(compensatingOperation);
+
+
+        return Cancellable.NULL;
     }
 
-    @Override
-    protected void applyUpdateBootAction(BootUpdateContext updateContext) {
-        javax.persistence.spi.PersistenceProviderResolverHolder.setPersistenceProviderResolver(
-                new PersistenceProviderResolverImpl() );
-
-        JPADeploymentActivator.activate(updateContext);
-        super.applyUpdateBootAction(updateContext);
-    }
-
-    @Override
-    protected JPASubsystemElement createSubsystemElement() {
-        return new JPASubsystemElement();
-    }
-
-    protected JBossAssemblyDescriptor getAssemblyDescriptor() {
-        return assemblyDescriptor;
-    }
-
-    protected void setAssemblyDescriptor(JBossAssemblyDescriptor assemblyDescriptor) {
-        this.assemblyDescriptor = assemblyDescriptor;
-    }
 }

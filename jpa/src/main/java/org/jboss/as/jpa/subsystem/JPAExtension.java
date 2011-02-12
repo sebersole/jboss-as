@@ -21,11 +21,36 @@
  */
 package org.jboss.as.jpa.subsystem;
 
-import org.jboss.as.server.Extension;
-import org.jboss.as.server.ExtensionContext;
-import org.jboss.msc.service.ServiceActivatorContext;
+import org.jboss.as.controller.Cancellable;
+import org.jboss.as.controller.Extension;
+import org.jboss.as.controller.ExtensionContext;
+import org.jboss.as.controller.ModelQueryOperationHandler;
+import org.jboss.as.controller.OperationContext;
+import org.jboss.as.controller.ResultHandler;
+import org.jboss.as.controller.SubsystemRegistration;
+import org.jboss.as.controller.descriptions.DescriptionProvider;
+import org.jboss.as.controller.descriptions.common.CommonDescriptions;
+import org.jboss.as.controller.operations.common.Util;
+import org.jboss.as.controller.parsing.ExtensionParsingContext;
+import org.jboss.as.controller.parsing.ParseUtils;
+import org.jboss.as.controller.persistence.SubsystemMarshallingContext;
+import org.jboss.as.controller.registry.ModelNodeRegistration;
+import org.jboss.dmr.ModelNode;
+import org.jboss.staxmapper.XMLElementReader;
+import org.jboss.staxmapper.XMLElementWriter;
+import org.jboss.staxmapper.XMLExtendedStreamReader;
+import org.jboss.staxmapper.XMLExtendedStreamWriter;
 
+import javax.xml.stream.XMLStreamException;
+import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
+
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.ADD;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.DESCRIBE;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP_ADDR;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.SUBSYSTEM;
 
 /**
  * Domain extension used to initialize the JPA subsystem element handlers.
@@ -34,14 +59,83 @@ import java.util.logging.Logger;
  */
 public class JPAExtension implements Extension {
 
-    private static final Logger log = Logger.getLogger("org.jboss.jpa");
-    @Override
-    public void initialize(ExtensionContext context) {
-        context.registerSubsystem(JPASubsystemParser.NAMESPACE, JPASubsystemParser.getInstance());
+    public static final String SUBSYSTEM_NAME = "jpa";
+
+    private static final Logger LOG = Logger.getLogger("org.jboss.jpa");
+    private static final JPASubsystemElementParser parser = new JPASubsystemElementParser();
+
+    private static final DescriptionProvider DESCRIPTION = new DescriptionProvider() {
+        @Override
+        public ModelNode getModelDescription(Locale locale) {
+            return new ModelNode();
+        }
+    };
+
+
+    private static ModelNode createAddOperation() {
+        final ModelNode update = new ModelNode();
+        update.get(OP).set(ADD);
+        update.get(OP_ADDR).add(SUBSYSTEM, SUBSYSTEM_NAME);
+        return update;
     }
 
     @Override
-    public void activate(ServiceActivatorContext context) {
-        log.info("activating JPA extension");
+    public void initialize(ExtensionContext context) {
+        SubsystemRegistration registration = context.registerSubsystem(SUBSYSTEM_NAME);
+        final ModelNodeRegistration nodeRegistration = registration.registerSubsystemModel(DESCRIPTION);
+        // registerOperationHandler(String operationName, OperationHandler handler, DescriptionProvider descriptionProvider, boolean inherited);
+        nodeRegistration.registerOperationHandler(ADD, JPASubsystemAdd.INSTANCE, DESCRIPTION, false);
+        nodeRegistration.registerOperationHandler(DESCRIBE, JPADescribeHandler.INSTANCE, JPADescribeHandler.INSTANCE, false);
+        registration.registerXMLElementWriter(parser);
+
     }
+
+    @Override
+    public void initializeParsers(ExtensionParsingContext context) {
+        context.setSubsystemXmlMapping(Namespace.CURRENT.getUriString(), parser);
+    }
+
+    private static class JPADescribeHandler implements ModelQueryOperationHandler, DescriptionProvider {
+        static final JPADescribeHandler INSTANCE = new JPADescribeHandler();
+        @Override
+        public Cancellable execute(OperationContext context, ModelNode operation, ResultHandler resultHandler) {
+            ModelNode node = new ModelNode();
+            node.add(createAddOperation());
+
+            resultHandler.handleResultFragment(Util.NO_LOCATION, node);
+            resultHandler.handleResultComplete(new ModelNode());
+            return Cancellable.NULL;
+        }
+
+        @Override
+        public ModelNode getModelDescription(Locale locale) {
+            return CommonDescriptions.getSubsystemDescribeOperation(locale);
+        }
+    }
+
+    static class JPASubsystemElementParser implements XMLElementReader<List<ModelNode>>,
+        XMLElementWriter<SubsystemMarshallingContext> {
+
+        /** {@inheritDoc} */
+        @Override
+        public void readElement(XMLExtendedStreamReader reader, List<ModelNode> list) throws XMLStreamException {
+            ParseUtils.requireNoAttributes(reader);
+            ParseUtils.requireNoContent(reader);
+            final ModelNode update = new ModelNode();
+            update.get(OP).set(ADD);
+            update.get(OP_ADDR).add(SUBSYSTEM, SUBSYSTEM_NAME);
+            list.add(createAddOperation());
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void writeContent(final XMLExtendedStreamWriter writer, final SubsystemMarshallingContext context) throws XMLStreamException {
+            //TODO seems to be a problem with empty elements cleaning up the queue in FormattingXMLStreamWriter.runAttrQueue
+            context.startSubsystemElement(Namespace.JPA_1_0.getUriString(), false);
+            writer.writeEndElement();
+
+        }
+    }
+
+
 }
