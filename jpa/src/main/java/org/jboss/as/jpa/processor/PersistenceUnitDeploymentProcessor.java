@@ -33,6 +33,7 @@ import org.jboss.as.jpa.persistenceprovider.PersistenceProviderAdapterRegistry;
 import org.jboss.as.jpa.service.PersistenceUnitService;
 import org.jboss.as.jpa.spi.PersistenceProviderAdaptor;
 import org.jboss.as.jpa.transaction.TransactionUtil;
+import org.jboss.as.jpa.validator.SerializableValidatorFactory;
 import org.jboss.as.server.deployment.Attachments;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.jboss.as.server.deployment.DeploymentUnit;
@@ -209,10 +210,8 @@ public class PersistenceUnitDeploymentProcessor implements DeploymentUnitProcess
 
                         final HashMap properties = new HashMap();
                         if (!ValidationMode.NONE.equals(pu.getValidationMode())) {
-                            ValidatorFactory validatorFactory = deploymentUnit.getAttachment(BeanValidationAttachments.VALIDATOR_FACTORY);
-                            if (validatorFactory == null) {
-                                throw new DeploymentUnitProcessingException("ValidatorFactory is null, could not set javax.persistence.validation.factory");
-                            }
+                            SerializableValidatorFactory.setDelegate(deploymentUnit.getAttachment(BeanValidationAttachments.VALIDATOR_FACTORY));
+                            ValidatorFactory validatorFactory = SerializableValidatorFactory.getINSTANCE();
                             properties.put("javax.persistence.validation.factory", validatorFactory);
                         }
                         addProviderProperties(pu, properties);
