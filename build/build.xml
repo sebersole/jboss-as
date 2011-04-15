@@ -62,18 +62,6 @@
           ~ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
           -->
 
-        <module-def name="org.antlr">
-            <maven-resource group="antlr" artifact="antlr" />
-        </module-def>
-
-        <module-def name="asm.asm">
-            <maven-resource group="asm" artifact="asm" />
-        </module-def>
-
-        <module-def name="net.sf.cglib">
-            <maven-resource group="cglib" artifact="cglib" />
-        </module-def>
-
         <module-def name="ch.qos.cal10n">
             <maven-resource group="ch.qos.cal10n" artifact="cal10n-api"/>
         </module-def>
@@ -352,6 +340,9 @@
         </module-def>
 
         <module-def name="org.hibernate">
+            <maven-resource group="antlr" artifact="antlr" />
+            <maven-resource group="asm" artifact="asm" />
+            <maven-resource group="cglib" artifact="cglib" />
             <maven-resource group="org.hibernate" artifact="hibernate-core" />
             <maven-resource group="org.hibernate" artifact="hibernate-commons-annotations" />
             <maven-resource group="org.hibernate" artifact="hibernate-entitymanager" />
