@@ -27,6 +27,10 @@ import org.jboss.as.jpa.spi.PersistenceProviderAdaptor;
 
 import java.util.Map;
 
+import org.hibernate.cfg.AvailableSettings;
+import org.hibernate.service.classloading.spi.ClassLoaderService;
+import org.hibernate.service.jta.platform.internal.JtaPlatformInitiator;
+
 /**
  * Implements the PersistenceProviderAdaptor for Hibernate
  *
@@ -34,22 +38,25 @@ import java.util.Map;
  */
 public class HibernatePersistenceProviderAdaptor implements PersistenceProviderAdaptor {
 
-    @Override
-    public void addProviderProperties(Map properties) {
-        properties.put("hibernate.transaction.manager_lookup_class", "org.jboss.as.jpa.hibernate.HibernateTransactionManagerLookup");
-        properties.put("hibernate.id.new_generator_mappings", "true");
-        properties.put("hibernate.ejb.resource_scanner","org.jboss.as.jpa.hibernate.HibernateAnnotationScanner");
-    }
+	@Override
+	public void addProviderProperties(Map properties) {
+		properties.put( "hibernate.id.new_generator_mappings", "true" );
+		properties.put( "hibernate.ejb.resource_scanner", "org.jboss.as.jpa.hibernate.HibernateAnnotationScanner" );
 
-    @Override
-    public void beforeCreateContainerEntityManagerFactory(PersistenceUnitMetadata pu) {
-        // set backdoor annotation scanner access to pu
-        HibernateAnnotationScanner.setThreadLocalPersistenceUnitMetadata(pu);
-    }
+		properties.put( AvailableSettings.APP_CLASSLOADER, null ); // smarlow, help!?!
 
-    @Override
-    public void afterCreateContainerEntityManagerFactory(PersistenceUnitMetadata pu) {
-        // clear backdoor annotation scanner access to pu
-        HibernateAnnotationScanner.clearThreadLocalPersistenceUnitMetadata();
-    }
+		properties.put( AvailableSettings.JTA_PLATFORM, new JBossAppServerJtaPlatform() );
+	}
+
+	@Override
+	public void beforeCreateContainerEntityManagerFactory(PersistenceUnitMetadata pu) {
+		// set backdoor annotation scanner access to pu
+		HibernateAnnotationScanner.setThreadLocalPersistenceUnitMetadata( pu );
+	}
+
+	@Override
+	public void afterCreateContainerEntityManagerFactory(PersistenceUnitMetadata pu) {
+		// clear backdoor annotation scanner access to pu
+		HibernateAnnotationScanner.clearThreadLocalPersistenceUnitMetadata();
+	}
 }

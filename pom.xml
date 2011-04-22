@@ -100,7 +100,7 @@
         <version.org.apache.santuario.xmlsec>1.4.3</version.org.apache.santuario.xmlsec>
         <version.org.apache.ws.commons.xmlschema>1.4.5</version.org.apache.ws.commons.xmlschema>
         <version.org.apache.ws.security>1.5.11</version.org.apache.ws.security>
-        <version.org.hibernate>3.6.1.Final</version.org.hibernate>
+        <version.org.hibernate>4.0.0-SNAPSHOT</version.org.hibernate>
         <version.org.codehaus.woodstox.stax2-api>3.1.1</version.org.codehaus.woodstox.stax2-api>
         <version.org.codehaus.woodstox.woodstox-core-asl>4.1.1</version.org.codehaus.woodstox.woodstox-core-asl>
         <version.org.hibernate.commons.annotations>3.2.0.Final</version.org.hibernate.commons.annotations>

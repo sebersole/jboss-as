@@ -19,34 +19,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.jboss.as.jpa.hibernate;
 
-import org.hibernate.HibernateException;
-import org.hibernate.transaction.JNDITransactionManagerLookup;
+import javax.transaction.TransactionManager;
+
 import org.jboss.as.jpa.transaction.TransactionUtil;
 
-import javax.transaction.TransactionManager;
-import java.util.Properties;
+import org.hibernate.service.jta.platform.internal.JBossAppServerPlatform;
 
 /**
- * Provide the transaction manager to Hibernate
- *
- * @author Scott Marlow
+ * @author Steve Ebersole
  */
-public class HibernateTransactionManagerLookup extends JNDITransactionManagerLookup {
+public class JBossAppServerJtaPlatform extends JBossAppServerPlatform {
+	@Override
+	protected boolean canCacheTransactionManager() {
+		return true;
+	}
 
+	@Override
+	protected TransactionManager locateTransactionManager() {
+		return TransactionUtil.getTransactionManager();
+	}
 
-    protected String getName() {
-        return "java:/TransactionManager";
-    }
-
-    public String getUserTransactionName() {
-        return "UserTransaction";
-    }
-
-    public TransactionManager getTransactionManager(Properties props) throws HibernateException {
-        return TransactionUtil.getTransactionManager();
-    }
-
+	// todo : verify that JNDI access to the TransactionSynchronizationRegistry is allowed
 }
